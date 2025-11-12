@@ -1,0 +1,19 @@
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+<h2>Lista de vinis</h2>   
+
+<ul>
+    {{#each vinis}}
+    <li>
+        <a href="/listarvinis/ver/{{id}}">{{nome}}</a>
+        <a href="/listarvinis/ver/{{id}}">{{artista}}</a>
+        <a href="/listarvinis/ver/{{id}}">R${{preco}}</a>
+    </li>
+    {{/each}}
+</ul>
+<a href="/">Voltar</a>
+</body>
