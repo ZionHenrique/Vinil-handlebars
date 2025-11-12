@@ -19,9 +19,15 @@ let vinis = [
 
 app.get('/', (rep, res)=> res.render('home'));
 
-app.get('/listavinil', (req,res) => {
+app.get('/vinis', (req,res) => {
     res.render('listaVinis', {vinis})
 })
+
+app.get('/vinis/add', (req,res) => {
+    res.render('addVinis', {vinis})
+})
+
+
 
 
 
