@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Perfil</title>
+</head>
+<body>
+    <h1>Adicionar Novo Perfil</h1>
+    <form action="/perfis" method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome" placeholder="Nome completo" required>
+        
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="email@exemplo.com" required>
+        
+        <label>Telefone:</label>
+        <input type="text" name="telefone" placeholder="(11) 99999-9999" required>
+        
+        <label>Endereço:</label>
+        <input type="text" name="endereco" placeholder="Rua, número, cidade" required>
+        
+        <button type="submit">Adicionar Perfil</button>
+    </form>
+    <a href="/perfis">Voltar para Lista</a> | <a href="/">Voltar para Home</a>
+</body>
+</html>
+

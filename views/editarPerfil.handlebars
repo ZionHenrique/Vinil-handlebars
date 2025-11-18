@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Perfil</title>
+</head>
+<body>
+    <h1>Editar Perfil</h1>
+    <form action="/perfis/{{perfil.id}}/update" method="POST">
+        <label>Nome:</label>
+        <input type="text" name="nome" value="{{perfil.nome}}" required>
+        
+        <label>Email:</label>
+        <input type="email" name="email" value="{{perfil.email}}" required>
+        
+        <label>Telefone:</label>
+        <input type="text" name="telefone" value="{{perfil.telefone}}" required>
+        
+        <label>Endereço:</label>
+        <input type="text" name="endereco" value="{{perfil.endereco}}" required>
+        
+        <button type="submit">Salvar Alterações</button>
+    </form>
+    <a href="/perfis/{{perfil.id}}">Voltar para Detalhes</a> | <a href="/perfis">Voltar para Lista</a>
+</body>
+</html>
+

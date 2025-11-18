@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Gênero</title>
+</head>
+<body>
+    <h1>Adicionar Novo Gênero</h1>
+    <form action="/generos" method="POST">
+        <label>Nome do Gênero:</label>
+        <input type="text" name="nome" placeholder="Ex: Rock, Pop, Rap" required>
+        
+        <label>Descrição:</label>
+        <textarea name="descricao" placeholder="Descreva o gênero musical" required></textarea>
+        
+        <button type="submit">Adicionar Gênero</button>
+    </form>
+    <a href="/generos">Voltar para Lista</a> | <a href="/">Voltar para Home</a>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Gêneros</title>
+</head>
+<body>
+    <h2>Lista de Gêneros</h2>
+    
+    <a href="/generos/add">Adicionar Novo Gênero</a>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each generos}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{nome}}</td>
+                <td>{{descricao}}</td>
+                <td>
+                    <a href="/generos/{{id}}">Ver</a>
+                    <a href="/generos/{{id}}/edit">Editar</a>
+                    <form action="/generos/{{id}}/delete" method="POST" style="display: inline;">
+                        <button type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    
+    <a href="/">Voltar para Home</a>
+</body>
+</html>
+

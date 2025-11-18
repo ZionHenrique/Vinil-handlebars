@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Perfil</title>
+</head>
+<body>
+    <h1>Detalhes do Perfil</h1>
+    
+    <p><strong>ID:</strong> {{perfil.id}}</p>
+    <p><strong>Nome:</strong> {{perfil.nome}}</p>
+    <p><strong>Email:</strong> {{perfil.email}}</p>
+    <p><strong>Telefone:</strong> {{perfil.telefone}}</p>
+    <p><strong>Endereço:</strong> {{perfil.endereco}}</p>
+    
+    <a href="/perfis/{{perfil.id}}/edit">Editar</a>
+    <form action="/perfis/{{perfil.id}}/delete" method="POST" style="display: inline;">
+        <button type="submit">Excluir</button>
+    </form>
+    <a href="/perfis">Voltar para Lista</a>
+</body>
+</html>
+

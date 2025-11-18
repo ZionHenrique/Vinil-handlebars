@@ -1,10 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <title>=Home🏠=</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Sistema de Gestão de Vinis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+        h1 { color: #333; }
+        .section { margin: 30px 0; padding: 20px; background-color: #f9f9f9; border-radius: 5px; }
+        .section h2 { color: #555; margin-top: 0; }
+        .section a { display: inline-block; margin: 5px 10px 5px 0; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; }
+        .section a:hover { background-color: #0056b3; }
+    </style>
 </head>
 <body>
-    <H1>Home🏠</H1>
-    <a href="/vinil/add">Add vinil</a>
-    <a href="/vinil">litinhainhavinil</a>
-    <a href="/addperfil">Fazer cadastro</a>
-    <a href="/perfil">Perfil</a>
+    <h1>Home - Sistema de Gestão de Vinis</h1>
+    
+    <div class="section">
+        <h2>Vinis</h2>
+        <a href="/vinis">Listar Vinis</a>
+        <a href="/vinis/add">Adicionar Vinil</a>
+    </div>
+    
+    <div class="section">
+        <h2>Perfis</h2>
+        <a href="/perfis">Listar Perfis</a>
+        <a href="/perfis/add">Adicionar Perfil</a>
+    </div>
+    
+    <div class="section">
+        <h2>Gêneros</h2>
+        <a href="/generos">Listar Gêneros</a>
+        <a href="/generos/add">Adicionar Gênero</a>
+    </div>
 </body>
+</html>

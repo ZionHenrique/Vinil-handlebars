@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Perfis</title>
+</head>
+<body>
+    <h2>Lista de Perfis</h2>
+    
+    <a href="/perfis/add">Adicionar Novo Perfil</a>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each perfis}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{nome}}</td>
+                <td>{{email}}</td>
+                <td>{{telefone}}</td>
+                <td>
+                    <a href="/perfis/{{id}}">Ver</a>
+                    <a href="/perfis/{{id}}/edit">Editar</a>
+                    <form action="/perfis/{{id}}/delete" method="POST" style="display: inline;">
+                        <button type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    
+    <a href="/">Voltar para Home</a>
+</body>
+</html>
+

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Gênero</title>
+</head>
+<body>
+    <h1>Editar Gênero</h1>
+    <form action="/generos/{{genero.id}}/update" method="POST">
+        <label>Nome do Gênero:</label>
+        <input type="text" name="nome" value="{{genero.nome}}" required>
+        
+        <label>Descrição:</label>
+        <textarea name="descricao" required>{{genero.descricao}}</textarea>
+        
+        <button type="submit">Salvar Alterações</button>
+    </form>
+    <a href="/generos/{{genero.id}}">Voltar para Detalhes</a> | <a href="/generos">Voltar para Lista</a>
+</body>
+</html>
+

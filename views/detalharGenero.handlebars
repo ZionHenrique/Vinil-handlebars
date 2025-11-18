@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Gênero</title>
+</head>
+<body>
+    <h1>Detalhes do Gênero</h1>
+    
+    <p><strong>ID:</strong> {{genero.id}}</p>
+    <p><strong>Nome:</strong> {{genero.nome}}</p>
+    <p><strong>Descrição:</strong> {{genero.descricao}}</p>
+    
+    <a href="/generos/{{genero.id}}/edit">Editar</a>
+    <form action="/generos/{{genero.id}}/delete" method="POST" style="display: inline;">
+        <button type="submit">Excluir</button>
+    </form>
+    <a href="/generos">Voltar para Lista</a>
+</body>
+</html>
+

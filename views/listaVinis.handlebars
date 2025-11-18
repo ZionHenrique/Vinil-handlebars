@@ -1,21 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Vinis</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        a { color: #0066cc; text-decoration: none; margin-right: 10px; }
+        a:hover { text-decoration: underline; }
+        button { background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button:hover { background-color: #c82333; }
+        .actions { white-space: nowrap; }
+    </style>
 </head>
-
 <body>
-<h2>Lista de vinis</h2>   
-
-<ul>
-    {{#each vinis}}
-    <li>
-        <a href="/listarvinis/ver/{{id}}">{{nome}}</a>
-        <a href="/listarvinis/ver/{{id}}">{{artista}}</a>
-        <a href="/listarvinis/ver/{{id}}">R${{preco}}</a>
-    </li>
-    {{/each}}
-</ul>
-<a href="/addvinl">Add vinil</a>
-<a href="/">Voltar</a>
-
+    <h2>Lista de Vinis</h2>
+    
+    <p><a href="/vinis/add">Adicionar Novo Vinil</a></p>
+    
+    {{#if vinis}}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Artista</th>
+                <th>Preço</th>
+                <th>Ano</th>
+                <th>Quantidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each vinis}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{nome}}</td>
+                <td>{{artista}}</td>
+                <td>R$ {{preco}}</td>
+                <td>{{ano}}</td>
+                <td>{{quant}}</td>
+                <td class="actions">
+                    <a href="/vinis/{{id}}">Ver</a>
+                    <a href="/vinis/{{id}}/edit">Editar</a>
+                    <form action="/vinis/{{id}}/delete" method="POST" style="display: inline;">
+                        <button type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <p>Nenhum vinil cadastrado ainda.</p>
+    {{/if}}
+    
+    <p><a href="/">← Voltar para Home</a></p>
 </body>
+</html>
