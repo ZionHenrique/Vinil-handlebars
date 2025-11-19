@@ -1,8 +1,8 @@
 # Sistema de Gestão de Vinis
-2 ano A
-Luany Rose Lima de Mélo
-Raquel Mariana Silva Nascimento 
-Zion Henrique Parcelino Cordeiro Germano
+2 ano A<br>
+Luany Rose Lima de Mélo<br>
+Raquel Mariana Silva Nascimento <br>
+Zion Henrique Parcelino Cordeiro Germano<br>
 
 ## Problema 
 
