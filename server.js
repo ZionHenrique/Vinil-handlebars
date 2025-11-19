@@ -13,14 +13,15 @@ app.set('view engine', 'handlebars');
 
 // Dados em memória
 let vinis = [
-    {id: 1, nome: 'Chromakopia', artista: 'Tyler, the Creator', preco: 536728.5678, ano: 2024, genero: ["rap"], quant: 456789},
-    {id: 2, nome: "Breach", artista:" Twenty one pilots", preco:11111.111, ano: 2025, genero: ["descubra", "rock alt", 'pop rock'], quant: 6969696},
-    {id: 3, nome: "To Pimp a butterfly", artista: "Kendrick Lamar", preco: 696696969.69, ano: 2015, genero: ["rap"], quant: 999999999}
+    {id: 1, nome: 'Chromakopia', artista: 'Tyler, the Creator', preco: 800.99, ano: 2024, genero: ["rap"], quant: 500},
+    {id: 2, nome: "Breach", artista:" Twenty one pilots", preco:666.66, ano: 2025, genero: ["descubra", "rock alt", 'pop rock'], quant: 690},
+    {id: 3, nome: "To Pimp a butterfly", artista: "Kendrick Lamar", preco: 1.69, ano: 2015, genero: ["rap"], quant: 20}
 ]
 
 let perfis = [
-    {id: 1, nome: 'João Silva', email: 'joao@email.com', telefone: '(11) 99999-9999', endereco: 'Rua A, 123'},
-    {id: 2, nome: 'Maria Santos', email: 'maria@email.com', telefone: '(11) 88888-8888', endereco: 'Rua B, 456'}
+    {id: 1, nome: 'João Guilherme', email: 'franga@email.com', telefone: '(24) 24242-4242', endereco: 'Rua Soltou, 123'},
+    {id: 2, nome: 'Virginia Fonseca', email: 'wepink@email.com', telefone: '(66) 66666-6666', endereco: 'Rua Flofo Biuta, 456'},
+    {id: 3, nome: 'Renan Bolsonaro', email: 'renanblsaro@gmail.com', telefone: '(22) 22222-2222', endereco: 'Rua Bolsoraro, 22'}
 ]
 
 let generos = [
@@ -64,7 +65,7 @@ app.post('/vinis', (req, res) => {
     res.redirect('/vinis');
 })
 
-// Detalhar vinil específico
+// Detalhar vinil 
 app.get('/vinis/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const vinil = vinis.find(v => v.id === id);
