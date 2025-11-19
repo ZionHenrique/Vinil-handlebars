@@ -1,4 +1,8 @@
 # Sistema de Gestão de Vinis
+2 ano A
+Luany Rose Lima de Mélo
+Raquel Mariana Silva Nascimento 
+Zion Henrique Parcelino Cordeiro Germano
 
 ## Problema 
 
