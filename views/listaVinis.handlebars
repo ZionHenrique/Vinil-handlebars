@@ -48,7 +48,7 @@
                     <a href="/vinis/{{id}}">Ver</a>
                     <a href="/vinis/{{id}}/edit">Editar</a>
                     <form action="/vinis/{{id}}/delete" method="POST" style="display: inline;">
-                        <button type="submit">Excluir</button>
+                        <button type="submit" onclick="return confirm('Comfirma exclusão?')">Excluir</button>
                     </form>
                 </td>
             </tr>

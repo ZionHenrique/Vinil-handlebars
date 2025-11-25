@@ -185,12 +185,9 @@ app.post('/perfis/:id/update', (req, res) => {
 app.post('/perfis/:id/delete', (req, res) => {
     const id = parseInt(req.params.id);
     const index = perfis.findIndex(p => p.id === id);
-    if (index !== -1) {
-        perfis.splice(index, 1);
-        res.redirect('/perfis');
-    } else {
-        res.status(404).send('Perfil não encontrado');
-    }
+    if (index === -1) return res.status(404).send('Perfil não encontrado');
+    perfis.splice(index, 1);
+    res.redirect('/perfis');
 })
 
 // ========== CRUD DE GÊNEROS ==========

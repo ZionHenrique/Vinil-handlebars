@@ -3,6 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Perfis</title>
+    <style>
+           body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        a { color: #0066cc; text-decoration: none; margin-right: 10px; }
+        a:hover { text-decoration: underline; }
+        button { background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button:hover { background-color: #c82333; }
+        .actions { white-space: nowrap; }
+    </style>
 </head>
 <body>
     <h2>Lista de Perfis</h2>
@@ -30,7 +42,7 @@
                     <a href="/perfis/{{id}}">Ver</a>
                     <a href="/perfis/{{id}}/edit">Editar</a>
                     <form action="/perfis/{{id}}/delete" method="POST" style="display: inline;">
-                        <button type="submit">Excluir</button>
+                        <button type="submit" onclick="return confirm('Comfirma exclusão?')">Excluir</button>
                     </form>
                 </td>
             </tr>
