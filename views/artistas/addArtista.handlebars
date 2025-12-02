@@ -19,6 +19,9 @@
     <h1>Adicionar Novo Artista</h1>
 
     <form action="/artistas" method="POST">
+        {{#if redirect}}
+        <input type="hidden" name="redirect" value="{{redirect}}">
+        {{/if}}
 
         <label>Nome do Artista:</label>
         <input type="text" name="nome" required>

@@ -11,16 +11,29 @@ router.get("/", (req, res) => {
 });
 
 // Form add
-router.get("/add", (req, res) => res.render("artistas/addArtista"));
+router.get("/add", (req, res) => {
+    const redirect = req.query.redirect || "/artistas";
+    res.render("artistas/addArtista", { redirect });
+});
 
 // Criar artista
 router.post("/", (req, res) => {
-    const { nome, pais, ano_inicio } = req.body;
+    const { nome, pais, ano_inicio, redirect } = req.body;
+    const redirectUrl = redirect || "/artistas";
+    
+    console.log("Criando artista:", { nome, pais, ano_inicio, redirect, redirectUrl });
 
     db.run(
         "INSERT INTO artistas (nome, pais, ano_inicio) VALUES (?, ?, ?)",
         [nome, pais, ano_inicio],
-        () => res.redirect("/artistas")
+        (err) => {
+            if (err) {
+                console.error("Erro ao inserir artista:", err);
+                return res.send("Erro ao adicionar artista: " + err.message);
+            }
+            console.log("Artista criado, redirecionando para:", redirectUrl);
+            res.redirect(redirectUrl);
+        }
     );
 });
 

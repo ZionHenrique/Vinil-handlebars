@@ -7,7 +7,7 @@
         h1 { color: #333; }
         form { margin-top: 20px; }
         label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
         select[multiple] { height: 100px; }
         small { display: block; color: #666; font-size: 12px; margin-top: 5px; }
         button { background-color: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
@@ -18,6 +18,10 @@
 <body>
     <h1>Adicionar Novo Gênero</h1>
     <form action="/generos" method="POST">
+        {{#if redirect}}
+        <input type="hidden" name="redirect" value="{{redirect}}">
+        {{/if}}
+        
         <label>Nome do Gênero:</label>
         <input type="text" name="nome" placeholder="Ex: Rock, Pop, Rap" required>
         
