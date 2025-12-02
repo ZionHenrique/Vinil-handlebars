@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 class="card-title" style="margin-bottom: 0;">Compras Realizadas</h1>
+                <a href="/compras/add" class="btn btn-primary">+ Nova Compra</a>
+            </div>
+        </div>
+
+        {{#if compras}}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Vinil</th>
+                        <th>Artista</th>
+                        <th>Quantidade</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each compras}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td><strong>{{clienteNome}}</strong></td>
+                        <td>{{vinilNome}}</td>
+                        <td>{{vinilArtista}}</td>
+                        <td>{{quantidade}}</td>
+                        <td>{{data}}</td>
+                        <td><strong style="color: var(--accent-color);">R$ {{total}}</strong></td>
+                        <td>
+                            <a href="/compras/{{id}}" class="btn btn-primary btn-sm">Ver</a>
+                            <a href="/compras/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="/compras/{{id}}/delete" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir esta compra?')">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="card">
+            <p style="text-align: center; color: #666; font-size: 18px;">Nenhuma compra registrada ainda. <a href="/compras/add">Registre a primeira!</a></p>
+        </div>
+        {{/if}}
+    </div>
+</body>
+</html>
+

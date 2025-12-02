@@ -1,0 +1,16 @@
+body {
+font-family: 'Courier New', monospace;
+background: var(--primary-color);
+color: var(--text-light);
+}
+
+
+details, .details {
+background: #444526;
+border-left: 6px solid #A88C05;
+}
+
+
+strong {
+color: #96DC9C;
+}

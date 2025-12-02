@@ -2,26 +2,54 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Perfil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cliente - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Editar Perfil</h1>
-    <form action="/perfis/{{perfil.id}}/update" method="POST">
-        <label>Nome:</label>
-        <input type="text" name="nome" value="{{perfil.nome}}" required>
-        
-        <label>Email:</label>
-        <input type="email" name="email" value="{{perfil.email}}" required>
-        
-        <label>Telefone:</label>
-        <input type="text" name="telefone" value="{{perfil.telefone}}" required>
-        
-        <label>Endereço:</label>
-        <input type="text" name="endereco" value="{{perfil.endereco}}" required>
-        
-        <button type="submit">Salvar Alterações</button>
-    </form>
-    <a href="/perfis/{{perfil.id}}">Voltar para Detalhes</a> | <a href="/perfis">Voltar para Lista</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h1 class="card-title">Editar Cliente</h1>
+            <form action="/perfis/{{perfil.id}}/update" method="POST">
+                <div class="form-group">
+                    <label for="nome">Nome Completo:</label>
+                    <input type="text" id="nome" name="nome" value="{{perfil.nome}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{perfil.email}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" name="telefone" value="{{perfil.telefone}}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" value="{{perfil.endereco}}" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <a href="/perfis/{{perfil.id}}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
-

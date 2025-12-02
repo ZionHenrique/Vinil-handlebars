@@ -14,18 +14,24 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
+// Helpers do Handlebars
 const hbs = exphbs.create({
     defaultLayout: false,
-    extname: '.handlebars',
     helpers: {
-        isEqual: function(a, b) {
+        eq: function(a, b) {
             return a === b;
+        },
+        contains: function(array, value) {
+            if (!array || !Array.isArray(array)) return false;
+            return array.includes(value);
         }
     }
 });
 
-app.engine('handlebars', hbs.engine);
+app.engine('handlebars', exphbs.engine({ defaultLayout: false }));
+
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 

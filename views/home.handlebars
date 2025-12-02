@@ -22,24 +22,58 @@
     </style>
 </head>
 <body>
-    <h1>Home - Sistema de Gestão de Vinis</h1>
-    
-    <div class="section">
-        <h2>Vinis</h2>
-        <a href="/vinis">Listar Vinis</a>
-        <a href="/vinis/add">Adicionar Vinil</a>
-    </div>
-    
-    <div class="section">
-        <h2>Perfis</h2>
-        <a href="/perfis">Listar Perfis</a>
-        <a href="/perfis/add">Adicionar Perfil</a>
-    </div>
-    
-    <div class="section">
-        <h2>Gêneros</h2>
-        <a href="/generos">Listar Gêneros</a>
-        <a href="/generos/add">Adicionar Gênero</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1 class="card-title">Bem-vindo à Vinil Store</h1>
+            <p style="font-size: 18px; color: #666; margin-bottom: 30px;">Sua loja completa de vinis! Gerencie produtos, clientes e compras com facilidade.</p>
+        </div>
+
+        <div class="home-grid">
+            <div class="home-card">
+                <div class="home-card-icon">💿</div>
+                <h2>Vinis</h2>
+                <p>Gerencie seu catálogo de vinis</p>
+                <a href="/vinis" class="btn btn-primary">Ver Catálogo</a>
+                <a href="/vinis/add" class="btn btn-secondary" style="margin-top: 10px;">Adicionar Vinil</a>
+            </div>
+
+            <div class="home-card">
+                <div class="home-card-icon">👥</div>
+                <h2>Clientes</h2>
+                <p>Gerencie perfis de clientes</p>
+                <a href="/perfis" class="btn btn-primary">Ver Clientes</a>
+                <a href="/perfis/add" class="btn btn-secondary" style="margin-top: 10px;">Adicionar Cliente</a>
+            </div>
+
+            <div class="home-card">
+                <div class="home-card-icon">🛒</div>
+                <h2>Compras</h2>
+                <p>Gerencie vendas e compras</p>
+                <a href="/compras" class="btn btn-primary">Ver Compras</a>
+                <a href="/compras/add" class="btn btn-secondary" style="margin-top: 10px;">Nova Compra</a>
+            </div>
+
+            <div class="home-card">
+                <div class="home-card-icon">🎵</div>
+                <h2>Gêneros</h2>
+                <p>Organize por gêneros musicais</p>
+                <a href="/generos" class="btn btn-primary">Ver Gêneros</a>
+                <a href="/generos/add" class="btn btn-secondary" style="margin-top: 10px;">Adicionar Gênero</a>
+            </div>
+        </div>
     </div>
 
     <div class="section">
