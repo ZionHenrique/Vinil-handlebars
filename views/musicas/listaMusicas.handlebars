@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artistas - Vinil Store</title>
+    <title>Músicas - Vinil Store</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -25,33 +25,35 @@
     <div class="container">
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h1 class="card-title" style="margin-bottom: 0;">Artistas</h1>
-                <a href="/artistas/add" class="btn btn-primary">+ Adicionar Artista</a>
+                <h1 class="card-title" style="margin-bottom: 0;">Músicas</h1>
+                <a href="/musicas/add" class="btn btn-primary">+ Adicionar Música</a>
             </div>
         </div>
 
-        {{#if artistas}}
+        {{#if musicas}}
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Biografia</th>
+                        <th>Duração</th>
+                        <th>Artista</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each artistas}}
+                    {{#each musicas}}
                     <tr>
                         <td>{{id}}</td>
                         <td><strong>{{nome}}</strong></td>
-                        <td>{{biografia}}</td>
+                        <td>{{duracao}}</td>
+                        <td>{{artistaNome}}</td>
                         <td>
-                            <a href="/artistas/{{id}}" class="btn btn-primary btn-sm">Ver</a>
-                            <a href="/artistas/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
-                            <form action="/artistas/{{id}}/delete" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este artista?')">Excluir</button>
+                            <a href="/musicas/{{id}}" class="btn btn-primary btn-sm">Ver</a>
+                            <a href="/musicas/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="/musicas/{{id}}/delete" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir esta música?')">Excluir</button>
                             </form>
                         </td>
                     </tr>
@@ -61,9 +63,10 @@
         </div>
         {{else}}
         <div class="card">
-            <p style="text-align: center; color: #666; font-size: 18px;">Nenhum artista cadastrado ainda. <a href="/artistas/add">Adicione o primeiro!</a></p>
+            <p style="text-align: center; color: #666; font-size: 18px;">Nenhuma música cadastrada ainda. <a href="/musicas/add">Adicione a primeira!</a></p>
         </div>
         {{/if}}
     </div>
 </body>
 </html>
+

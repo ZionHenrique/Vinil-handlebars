@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Vinis - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 class="card-title" style="margin-bottom: 0;">Catálogo de Vinis</h1>
+                <a href="/vinis/add" class="btn btn-primary">+ Adicionar Vinil</a>
+            </div>
+        </div>
+
+        {{#if vinis}}
+        <div class="vinis-grid">
+            {{#each vinis}}
+            <div class="vinil-card">
+                {{#if foto}}
+                <img src="{{foto}}" alt="{{nome}}" class="vinil-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="vinil-image" data-nome="{{nome}}" data-artista="{{artista}}" data-ano="{{ano}}" style="display: none;"></div>
+                {{else}}
+                <div class="vinil-image" data-nome="{{nome}}" data-artista="{{artista}}" data-ano="{{ano}}"></div>
+                {{/if}}
+                <div class="vinil-info">
+                    <div class="vinil-title">{{nome}}</div>
+                    <div class="vinil-artist">{{artista}}</div>
+                    <div class="vinil-price">R$ {{preco}}</div>
+                    <div class="vinil-meta">
+                        <span>📅 {{ano}}</span>
+                        <span>📦 Estoque: {{quant}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        {{#each genero}}
+                        <span class="badge">{{this}}</span>
+                        {{/each}}
+                    </div>
+                    <div class="vinil-actions">
+                        <a href="/vinis/{{id}}" class="btn btn-primary btn-sm">Ver Detalhes</a>
+                        <a href="/vinis/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
+                        <form action="/vinis/{{id}}/delete" method="POST" style="display: inline; flex: 1;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este vinil?')" style="width: 100%;">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="card">
+            <p style="text-align: center; color: #666; font-size: 18px;">Nenhum vinil cadastrado ainda. <a href="/vinis/add">Adicione o primeiro!</a></p>
+        </div>
+        {{/if}}
+    </div>
+    <script src="/js/vinyl-covers.js"></script>
+    <script>
+        // Aplicar capas vintage após o carregamento
+        document.addEventListener('DOMContentLoaded', function() {
+            const vinilImages = document.querySelectorAll('.vinil-image[data-nome]');
+            vinilImages.forEach(function(img) {
+                const nome = img.getAttribute('data-nome');
+                const artista = img.getAttribute('data-artista');
+                const ano = img.getAttribute('data-ano');
+                generateVinylCover(img, nome, artista, ano);
+            });
+        });
+    </script>
+</body>
+</html>
