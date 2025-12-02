@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{artista.nome}} - Vinil Store</title>
+    <title>{{musica.nome}} - Vinil Store</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -24,28 +24,34 @@
 
     <div class="container">
         <div class="card">
-            <h1 class="card-title">{{artista.nome}}</h1>
+            <h1 class="card-title">{{musica.nome}}</h1>
             
             <div style="margin-top: 30px;">
                 <div style="margin-bottom: 20px;">
                     <strong style="color: var(--primary-color); font-size: 18px;">ID:</strong>
-                    <span style="font-size: 18px; margin-left: 10px;">{{artista.id}}</span>
+                    <span style="font-size: 18px; margin-left: 10px;">{{musica.id}}</span>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: var(--primary-color); font-size: 18px;">Duração:</strong>
+                    <span style="font-size: 18px; margin-left: 10px;">{{musica.duracao}}</span>
                 </div>
                 
                 <div style="margin-bottom: 30px;">
-                    <strong style="color: var(--primary-color); font-size: 18px; display: block; margin-bottom: 10px;">Biografia:</strong>
-                    <p style="font-size: 16px; line-height: 1.6; color: #666; padding: 15px; background: #f8f9fa; border-radius: 8px;">{{artista.biografia}}</p>
+                    <strong style="color: var(--primary-color); font-size: 18px;">Artista:</strong>
+                    <span style="font-size: 18px; margin-left: 10px;">{{artistaNome}}</span>
                 </div>
             </div>
             
             <div class="form-actions">
-                <a href="/artistas/{{artista.id}}/edit" class="btn btn-primary">Editar Artista</a>
-                <form action="/artistas/{{artista.id}}/delete" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este artista?')">Excluir</button>
+                <a href="/musicas/{{musica.id}}/edit" class="btn btn-primary">Editar Música</a>
+                <form action="/musicas/{{musica.id}}/delete" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta música?')">Excluir</button>
                 </form>
-                <a href="/artistas" class="btn btn-secondary">Voltar para Lista</a>
+                <a href="/musicas" class="btn btn-secondary">Voltar para Lista</a>
             </div>
         </div>
     </div>
 </body>
 </html>
+

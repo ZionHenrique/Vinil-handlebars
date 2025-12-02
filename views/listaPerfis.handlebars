@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artistas - Vinil Store</title>
+    <title>Clientes - Vinil Store</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -15,8 +15,6 @@
                 <a href="/vinis">Vinis</a>
                 <a href="/perfis">Clientes</a>
                 <a href="/compras">Compras</a>
-                <a href="/artistas">Artistas</a>
-                <a href="/musicas">Músicas</a>
                 <a href="/generos">Gêneros</a>
             </nav>
         </div>
@@ -25,33 +23,37 @@
     <div class="container">
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h1 class="card-title" style="margin-bottom: 0;">Artistas</h1>
-                <a href="/artistas/add" class="btn btn-primary">+ Adicionar Artista</a>
+                <h1 class="card-title" style="margin-bottom: 0;">Clientes</h1>
+                <a href="/perfis/add" class="btn btn-primary">+ Adicionar Cliente</a>
             </div>
         </div>
 
-        {{#if artistas}}
+        {{#if perfis}}
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Biografia</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Endereço</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each artistas}}
+                    {{#each perfis}}
                     <tr>
                         <td>{{id}}</td>
                         <td><strong>{{nome}}</strong></td>
-                        <td>{{biografia}}</td>
+                        <td>{{email}}</td>
+                        <td>{{telefone}}</td>
+                        <td>{{endereco}}</td>
                         <td>
-                            <a href="/artistas/{{id}}" class="btn btn-primary btn-sm">Ver</a>
-                            <a href="/artistas/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
-                            <form action="/artistas/{{id}}/delete" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este artista?')">Excluir</button>
+                            <a href="/perfis/{{id}}" class="btn btn-primary btn-sm">Ver</a>
+                            <a href="/perfis/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="/perfis/{{id}}/delete" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este cliente?')">Excluir</button>
                             </form>
                         </td>
                     </tr>
@@ -61,9 +63,10 @@
         </div>
         {{else}}
         <div class="card">
-            <p style="text-align: center; color: #666; font-size: 18px;">Nenhum artista cadastrado ainda. <a href="/artistas/add">Adicione o primeiro!</a></p>
+            <p style="text-align: center; color: #666; font-size: 18px;">Nenhum cliente cadastrado ainda. <a href="/perfis/add">Adicione o primeiro!</a></p>
         </div>
         {{/if}}
     </div>
 </body>
 </html>
+

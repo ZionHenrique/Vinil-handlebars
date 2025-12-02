@@ -2,38 +2,46 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Adicionar Artista</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
-        label { display:block; margin-top:15px; font-weight:bold; }
-        input { width:100%; padding:8px; margin-top:5px; }
-        button {
-            margin-top: 20px; padding: 10px 20px;
-            background: #28a745; border: none; color:white; cursor:pointer;
-        }
-        button:hover { background:#218838; }
-        a { color:#0066cc; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Artista - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Adicionar Novo Artista</h1>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/artistas">Artistas</a>
+                <a href="/musicas">Músicas</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
 
-    <form action="/artistas" method="POST">
-
-        <label>Nome do Artista:</label>
-        <input type="text" name="nome" required>
-
-        <label>País de Origem:</label>
-        <input type="text" name="pais" placeholder="Ex: EUA, Brasil, UK" required>
-
-        <label>Ano de Início:</label>
-        <input type="number" name="ano_inicio" placeholder="Ex: 2010" required>
-
-        <button type="submit">Adicionar Artista</button>
-    </form>
-
-    <br>
-    <a href="/artistas">Voltar para Lista</a> |
-    <a href="/">Home</a>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="card-title">Adicionar Novo Artista</h1>
+            <form action="/artistas" method="POST">
+                <div class="form-group">
+                    <label for="nome">Nome do Artista:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Tyler, the Creator" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="biografia">Biografia:</label>
+                    <textarea id="biografia" name="biografia" rows="4" placeholder="Descreva o artista"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Adicionar Artista</button>
+                    <a href="/artistas" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
