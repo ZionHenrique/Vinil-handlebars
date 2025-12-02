@@ -2,37 +2,54 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Adicionar Perfil</title>
-    <style> body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
-        h1 { color: #333; }
-        form { margin-top: 20px; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        select[multiple] { height: 100px; }
-        small { display: block; color: #666; font-size: 12px; margin-top: 5px; }
-        button { background-color: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
-        button:hover { background-color: #218838; }
-        a { color: #0066cc; text-decoration: none; margin-right: 10px; }
-        a:hover { text-decoration: underline; }</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Cliente - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Adicionar Novo Perfil</h1>
-    <form action="/perfis" method="POST">
-        <label>Nome:</label>
-        <input type="text" name="nome" placeholder="Nome completo" required>
-        
-        <label>Email:</label>
-        <input type="email" name="email" placeholder="email@exemplo.com" required>
-        
-        <label>Telefone:</label>
-        <input type="text" name="telefone" placeholder="(11) 99999-9999" required>
-        
-        <label>Endereço:</label>
-        <input type="text" name="endereco" placeholder="Rua, número, cidade" required>
-        
-        <button type="submit">Adicionar Perfil</button>
-    </form>
-    <a href="/perfis">Voltar para Lista</a> | <a href="/">Voltar para Home</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h1 class="card-title">Adicionar Novo Cliente</h1>
+            <form action="/perfis" method="POST">
+                <div class="form-group">
+                    <label for="nome">Nome Completo:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: João Silva" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="email@exemplo.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" placeholder="Rua, número, cidade" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
+                    <a href="/perfis" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
-

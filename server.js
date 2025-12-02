@@ -6,9 +6,23 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-app.engine('handlebars', exphbs.engine({ defaultLayout: false }));
+// Helpers do Handlebars
+const hbs = exphbs.create({
+    defaultLayout: false,
+    helpers: {
+        eq: function(a, b) {
+            return a === b;
+        },
+        contains: function(array, value) {
+            if (!array || !Array.isArray(array)) return false;
+            return array.includes(value);
+        }
+    }
+});
 
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // Dados em memória
@@ -30,9 +44,15 @@ let generos = [
     {id: 3, nome: 'Pop', descricao: 'Música popular'}
 ]
 
+let compras = [
+    {id: 1, clienteId: 1, vinilId: 1, quantidade: 2, data: '2024-01-15', total: 1601.98},
+    {id: 2, clienteId: 2, vinilId: 2, quantidade: 1, data: '2024-01-20', total: 666.66}
+]
+
 let nextViniId = 4;
-let nextPerfilId = 3;
+let nextPerfilId = 4;
 let nextGeneroId = 4;
+let nextCompraId = 3;
 
 // Rota principal
 app.get('/', (req, res) => res.render('home'));
@@ -260,6 +280,152 @@ app.post('/generos/:id/delete', (req, res) => {
     }
 })
 
+// ========== CRUD DE COMPRAS ==========
+// Listar todas as compras
+app.get('/compras', (req, res) => {
+    const comprasComDetalhes = compras.map(compra => {
+        const cliente = perfis.find(p => p.id === compra.clienteId);
+        const vinil = vinis.find(v => v.id === compra.vinilId);
+        return {
+            ...compra,
+            clienteNome: cliente ? cliente.nome : 'Cliente não encontrado',
+            vinilNome: vinil ? vinil.nome : 'Vinil não encontrado',
+            vinilArtista: vinil ? vinil.artista : ''
+        };
+    });
+    res.render('listaCompras', {compras: comprasComDetalhes, perfis, vinis});
+})
+
+// Formulário para adicionar compra
+app.get('/compras/add', (req, res) => {
+    res.render('addCompra', {perfis, vinis})
+})
+
+// Criar nova compra
+app.post('/compras', (req, res) => {
+    const {clienteId, vinilId, quantidade} = req.body;
+    const cliente = perfis.find(p => p.id === parseInt(clienteId));
+    const vinil = vinis.find(v => v.id === parseInt(vinilId));
+    
+    if (!cliente || !vinil) {
+        return res.status(400).send('Cliente ou vinil não encontrado');
+    }
+    
+    const qtd = parseInt(quantidade) || 1;
+    if (qtd > vinil.quant) {
+        return res.status(400).send('Quantidade solicitada maior que o estoque disponível');
+    }
+    
+    const total = vinil.preco * qtd;
+    const novaCompra = {
+        id: nextCompraId++,
+        clienteId: parseInt(clienteId),
+        vinilId: parseInt(vinilId),
+        quantidade: qtd,
+        data: new Date().toISOString().split('T')[0],
+        total: total
+    };
+    
+    // Atualizar estoque
+    vinil.quant -= qtd;
+    
+    compras.push(novaCompra);
+    res.redirect('/compras');
+})
+
+// Detalhar compra específica
+app.get('/compras/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const compra = compras.find(c => c.id === id);
+    if (compra) {
+        const cliente = perfis.find(p => p.id === compra.clienteId);
+        const vinil = vinis.find(v => v.id === compra.vinilId);
+        res.render('detalharCompra', {
+            compra: {
+                ...compra,
+                cliente: cliente || {nome: 'Cliente não encontrado'},
+                vinil: vinil || {nome: 'Vinil não encontrado'}
+            }
+        });
+    } else {
+        res.status(404).send('Compra não encontrada');
+    }
+})
+
+// Formulário para editar compra
+app.get('/compras/:id/edit', (req, res) => {
+    const id = parseInt(req.params.id);
+    const compra = compras.find(c => c.id === id);
+    if (compra) {
+        res.render('editarCompra', {compra, perfis, vinis});
+    } else {
+        res.status(404).send('Compra não encontrada');
+    }
+})
+
+// Atualizar compra
+app.post('/compras/:id/update', (req, res) => {
+    const id = parseInt(req.params.id);
+    const {clienteId, vinilId, quantidade, data} = req.body;
+    const index = compras.findIndex(c => c.id === id);
+    
+    if (index !== -1) {
+        const compraAntiga = compras[index];
+        const vinilAntigo = vinis.find(v => v.id === compraAntiga.vinilId);
+        const vinilNovo = vinis.find(v => v.id === parseInt(vinilId));
+        
+        // Restaurar estoque do vinil antigo
+        if (vinilAntigo) {
+            vinilAntigo.quant += compraAntiga.quantidade;
+        }
+        
+        // Verificar estoque do novo vinil
+        const qtd = parseInt(quantidade) || 1;
+        if (qtd > vinilNovo.quant) {
+            // Restaurar estoque
+            if (vinilAntigo) {
+                vinilAntigo.quant -= compraAntiga.quantidade;
+            }
+            return res.status(400).send('Quantidade solicitada maior que o estoque disponível');
+        }
+        
+        // Atualizar estoque do novo vinil
+        vinilNovo.quant -= qtd;
+        
+        const total = vinilNovo.preco * qtd;
+        compras[index] = {
+            id,
+            clienteId: parseInt(clienteId),
+            vinilId: parseInt(vinilId),
+            quantidade: qtd,
+            data: data || compraAntiga.data,
+            total: total
+        };
+        res.redirect('/compras');
+    } else {
+        res.status(404).send('Compra não encontrada');
+    }
+})
+
+// Deletar compra
+app.post('/compras/:id/delete', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = compras.findIndex(c => c.id === id);
+    if (index !== -1) {
+        const compra = compras[index];
+        const vinil = vinis.find(v => v.id === compra.vinilId);
+        
+        // Restaurar estoque
+        if (vinil) {
+            vinil.quant += compra.quantidade;
+        }
+        
+        compras.splice(index, 1);
+        res.redirect('/compras');
+    } else {
+        res.status(404).send('Compra não encontrada');
+    }
+})
 
 
 

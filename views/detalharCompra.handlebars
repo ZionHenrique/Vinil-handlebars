@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Compra - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1 class="card-title">Detalhes da Compra #{{compra.id}}</h1>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+                <div>
+                    <h2 style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;">Informações do Cliente</h2>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Nome:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.cliente.nome}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Email:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.cliente.email}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Telefone:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.cliente.telefone}}</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;">Informações do Produto</h2>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Vinil:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.vinil.nome}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Artista:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.vinil.artista}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--primary-color);">Quantidade:</strong>
+                        <span style="font-size: 18px; margin-left: 10px;">{{compra.quantidade}} unidade(s)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Data da Compra</div>
+                        <div style="font-size: 20px; font-weight: bold;">{{compra.data}}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Total</div>
+                        <div style="font-size: 36px; font-weight: bold;">R$ {{compra.total}}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions" style="margin-top: 30px;">
+                <a href="/compras/{{compra.id}}/edit" class="btn btn-primary">Editar Compra</a>
+                <form action="/compras/{{compra.id}}/delete" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta compra?')">Excluir</button>
+                </form>
+                <a href="/compras" class="btn btn-secondary">Voltar para Lista</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

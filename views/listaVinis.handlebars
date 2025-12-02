@@ -3,62 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Vinis</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h2 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
-        th { background-color: #f2f2f2; }
-        a { color: #0066cc; text-decoration: none; margin-right: 10px; }
-        a:hover { text-decoration: underline; }
-        button { background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; }
-        button:hover { background-color: #c82333; }
-        .actions { white-space: nowrap; }
-    </style>
+    <title>Catálogo de Vinis - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h2>Lista de Vinis</h2>
-    
-    <p><a href="/vinis/add">Adicionar Novo Vinil</a></p>
-    
-    {{#if vinis}}
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Artista</th>
-                <th>Preço</th>
-                <th>Ano</th>
-                <th>Quantidade</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 class="card-title" style="margin-bottom: 0;">Catálogo de Vinis</h1>
+                <a href="/vinis/add" class="btn btn-primary">+ Adicionar Vinil</a>
+            </div>
+        </div>
+
+        {{#if vinis}}
+        <div class="vinis-grid">
             {{#each vinis}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{nome}}</td>
-                <td>{{artista}}</td>
-                <td>R$ {{preco}}</td>
-                <td>{{ano}}</td>
-                <td>{{quant}}</td>
-                <td class="actions">
-                    <a href="/vinis/{{id}}">Ver</a>
-                    <a href="/vinis/{{id}}/edit">Editar</a>
-                    <form action="/vinis/{{id}}/delete" method="POST" style="display: inline;">
-                        <button type="submit" onclick="return confirm('Comfirma exclusão?')">Excluir</button>
-                    </form>
-                </td>
-            </tr>
+            <div class="vinil-card">
+                <div class="vinil-image">
+                    <span style="font-size: 120px;">💿</span>
+                </div>
+                <div class="vinil-info">
+                    <div class="vinil-title">{{nome}}</div>
+                    <div class="vinil-artist">{{artista}}</div>
+                    <div class="vinil-price">R$ {{preco}}</div>
+                    <div class="vinil-meta">
+                        <span>📅 {{ano}}</span>
+                        <span>📦 Estoque: {{quant}}</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        {{#each genero}}
+                        <span class="badge">{{this}}</span>
+                        {{/each}}
+                    </div>
+                    <div class="vinil-actions">
+                        <a href="/vinis/{{id}}" class="btn btn-primary btn-sm">Ver Detalhes</a>
+                        <a href="/vinis/{{id}}/edit" class="btn btn-secondary btn-sm">Editar</a>
+                        <form action="/vinis/{{id}}/delete" method="POST" style="display: inline; flex: 1;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este vinil?')" style="width: 100%;">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {{/each}}
-        </tbody>
-    </table>
-    {{else}}
-    <p>Nenhum vinil cadastrado ainda.</p>
-    {{/if}}
-    
-    <p><a href="/">← Voltar para Home</a></p>
+        </div>
+        {{else}}
+        <div class="card">
+            <p style="text-align: center; color: #666; font-size: 18px;">Nenhum vinil cadastrado ainda. <a href="/vinis/add">Adicione o primeiro!</a></p>
+        </div>
+        {{/if}}
+    </div>
 </body>
 </html>
