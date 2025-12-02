@@ -1,82 +1,168 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../config/database");
+const { Vinil, Genero, Artista, Musica } = require("../models");
 
 // Listar vinis
-router.get('/', (req, res) => {
-    db.all("SELECT * FROM vinis", [], (err, rows) => {
-        if (err) return res.send("Erro: " + err.message);
-        rows.forEach(v => v.genero = v.genero ? v.genero.split(",") : []);
-        res.render('vinis/listaVinis', { vinis: rows });
-    });
+router.get('/', async (req, res) => {
+    try {
+        const vinis = await Vinil.findAll({
+            order: [['id', 'ASC']],
+            raw: false
+        });
+        // Garantir que o getter seja chamado acessando a propriedade antes de toJSON
+        const vinisData = vinis.map(v => {
+            // Acessar genero para forçar o getter
+            const genero = v.genero;
+            const data = v.toJSON();
+            // Garantir que genero seja um array
+            data.genero = Array.isArray(genero) ? genero : (genero ? [genero] : []);
+            return data;
+        });
+        res.render('listaVinis', { vinis: vinisData });
+    } catch (error) {
+        res.status(500).send('Erro ao buscar vinis: ' + error.message);
+    }
 });
 
 // Form adicionar
-router.get('/add', (req, res) => {
-    db.all("SELECT * FROM generos", [], (err, generos) => {
-        if (err) {
-            console.error("Erro ao buscar gêneros:", err);
-            generos = [];
-        }
-        db.all("SELECT * FROM artistas ORDER BY nome", [], (err, artistas) => {
-            if (err) {
-                console.error("Erro ao buscar artistas:", err);
-                artistas = [];
-            }
-            console.log("Artistas encontrados:", artistas.length);
-            console.log("Artistas:", JSON.stringify(artistas, null, 2));
-            res.render('vinis/addVinis', { generos: generos || [], artistas: artistas || [] });
+router.get('/add', async (req, res) => {
+    try {
+        const generos = await Genero.findAll({ order: [['nome', 'ASC']] });
+        const artistas = await Artista.findAll({ order: [['nome', 'ASC']] });
+        const musicas = await Musica.findAll({ order: [['nome', 'ASC']] });
+        res.render('addVinis', { 
+            generos: generos.map(g => g.toJSON()),
+            artistas: artistas.map(a => a.toJSON()),
+            musicas: musicas.map(m => m.toJSON())
         });
-    });
+    } catch (error) {
+        res.status(500).send('Erro ao carregar formulário: ' + error.message);
+    }
 });
 
 // Criar
-router.post('/', (req, res) => {
-    const { nome, artista, preco, ano, genero, quant } = req.body;
-
-    db.run(`
-        INSERT INTO vinis (nome, artista, preco, ano, genero, quant)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `, [nome, artista, preco, ano, genero, quant], () => res.redirect('/vinis'));
+router.post('/', async (req, res) => {
+    try {
+        const { nome, artista, artistaId, musicaId, preco, ano, genero, quant, foto } = req.body;
+        const generosArray = genero ? (Array.isArray(genero) ? genero : [genero]) : [];
+        
+        let nomeArtista = artista;
+        if (artistaId) {
+            const artistaObj = await Artista.findByPk(artistaId);
+            if (artistaObj) nomeArtista = artistaObj.nome;
+        }
+        
+        await Vinil.create({
+            nome,
+            artista: nomeArtista,
+            artistaId: artistaId ? parseInt(artistaId) : null,
+            musicaId: musicaId ? parseInt(musicaId) : null,
+            preco: parseFloat(preco) || 0,
+            ano: parseInt(ano) || new Date().getFullYear(),
+            genero: generosArray,
+            quant: parseInt(quant) || 0,
+            foto: foto || ''
+        });
+        res.redirect('/vinis');
+    } catch (error) {
+        res.status(500).send('Erro ao criar vinil: ' + error.message);
+    }
 });
 
 // Detalhar
-router.get('/:id', (req, res) => {
-    db.get("SELECT * FROM vinis WHERE id = ?", [req.params.id], (err, vinil) => {
-        if (!vinil) return res.send("Vinil não encontrado");
-        vinil.genero = vinil.genero ? vinil.genero.split(",") : [];
-        res.render("vinis/detalharVinil", { vinil });
-    });
+router.get('/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const vinil = await Vinil.findByPk(id);
+        if (vinil) {
+            const genero = vinil.genero;
+            const data = vinil.toJSON();
+            data.genero = Array.isArray(genero) ? genero : (genero ? [genero] : []);
+            res.render('detalharVinil', { vinil: data });
+        } else {
+            res.status(404).send('Vinil não encontrado');
+        }
+    } catch (error) {
+        res.status(500).send('Erro ao buscar vinil: ' + error.message);
+    }
 });
 
 // Editar form
-router.get('/:id/edit', (req, res) => {
-    db.get("SELECT * FROM vinis WHERE id = ?", [req.params.id], (err, vinil) => {
-        if (!vinil) return res.send("Vinil não encontrado");
-
-        db.all("SELECT * FROM generos ORDER BY nome", [], (err, generos) => {
-            if (err) generos = [];
-            db.all("SELECT * FROM artistas ORDER BY nome", [], (err, artistas) => {
-                if (err) artistas = [];
-                res.render("vinis/editarVinil", { vinil, generos, artistas });
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const vinil = await Vinil.findByPk(id);
+        if (vinil) {
+            const generos = await Genero.findAll({ order: [['nome', 'ASC']] });
+            const artistas = await Artista.findAll({ order: [['nome', 'ASC']] });
+            const musicas = await Musica.findAll({ order: [['nome', 'ASC']] });
+            const genero = vinil.genero;
+            const vinilData = vinil.toJSON();
+            vinilData.genero = Array.isArray(genero) ? genero : (genero ? [genero] : []);
+            res.render('editarVinil', { 
+                vinil: vinilData,
+                generos: generos.map(g => g.toJSON()),
+                artistas: artistas.map(a => a.toJSON()),
+                musicas: musicas.map(m => m.toJSON())
             });
-        });
-    });
+        } else {
+            res.status(404).send('Vinil não encontrado');
+        }
+    } catch (error) {
+        res.status(500).send('Erro ao carregar formulário: ' + error.message);
+    }
 });
 
 // Atualizar
-router.post('/:id/update', (req, res) => {
-    const { nome, artista, preco, ano, genero, quant } = req.body;
-
-    db.run(`
-        UPDATE vinis SET nome=?, artista=?, preco=?, ano=?, genero=?, quant=?
-        WHERE id=?
-    `, [nome, artista, preco, ano, genero, quant, req.params.id], () => res.redirect('/vinis'));
+router.post('/:id/update', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { nome, artista, artistaId, musicaId, preco, ano, genero, quant, foto } = req.body;
+        const vinil = await Vinil.findByPk(id);
+        
+        if (!vinil) {
+            return res.status(404).send('Vinil não encontrado');
+        }
+        
+        const generosArray = genero ? (Array.isArray(genero) ? genero : [genero]) : [];
+        
+        let nomeArtista = artista || vinil.artista;
+        if (artistaId) {
+            const artistaObj = await Artista.findByPk(artistaId);
+            if (artistaObj) nomeArtista = artistaObj.nome;
+        }
+        
+        await vinil.update({
+            nome,
+            artista: nomeArtista,
+            artistaId: artistaId ? parseInt(artistaId) : vinil.artistaId,
+            musicaId: musicaId ? parseInt(musicaId) : vinil.musicaId,
+            preco: parseFloat(preco) || 0,
+            ano: parseInt(ano) || new Date().getFullYear(),
+            genero: generosArray,
+            quant: parseInt(quant) || 0,
+            foto: foto || vinil.foto || ''
+        });
+        res.redirect('/vinis');
+    } catch (error) {
+        res.status(500).send('Erro ao atualizar vinil: ' + error.message);
+    }
 });
 
 // Deletar
-router.post('/:id/delete', (req, res) => {
-    db.run("DELETE FROM vinis WHERE id = ?", [req.params.id], () => res.redirect('/vinis'));
+router.post('/:id/delete', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const vinil = await Vinil.findByPk(id);
+        if (vinil) {
+            await vinil.destroy();
+            res.redirect('/vinis');
+        } else {
+            res.status(404).send('Vinil não encontrado');
+        }
+    } catch (error) {
+        res.status(500).send('Erro ao deletar vinil: ' + error.message);
+    }
 });
 
 module.exports = router;

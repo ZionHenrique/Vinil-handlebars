@@ -11,6 +11,14 @@ const Artista = sequelize.define('Artista', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    pais: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    ano_inicio: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     biografia: {
         type: DataTypes.TEXT,
         allowNull: true

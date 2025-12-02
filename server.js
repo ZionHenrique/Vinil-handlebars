@@ -29,156 +29,22 @@ app.set('view engine', 'handlebars');
 // Sincronizar banco de dados ao iniciar
 syncDatabase();
 
+// Importar rotas
+const vinisRoutes = require('./routes/vinisRoutes');
+const perfisRoutes = require('./routes/perfisRoutes');
+const generosRoutes = require('./routes/generosRoutes');
+const artistasRoutes = require('./routes/artistasRoutes');
+
 // Rota principal
 app.get('/', (req, res) => res.render('home'));
 
-// ========== CRUD DE VINIS ==========
-// Listar todos os vinis
-app.get('/vinis', async (req, res) => {
-    try {
-        const vinis = await Vinil.findAll({
-            order: [['id', 'ASC']]
-        });
-        res.render('listaVinis', { vinis: vinis.map(v => v.toJSON()) });
-    } catch (error) {
-        res.status(500).send('Erro ao buscar vinis: ' + error.message);
-    }
-});
+// Usar rotas
+app.use('/vinis', vinisRoutes);
+app.use('/perfis', perfisRoutes);
+app.use('/generos', generosRoutes);
+app.use('/artistas', artistasRoutes);
 
-// Formulário para adicionar vinil
-app.get('/vinis/add', async (req, res) => {
-    try {
-        const generos = await Genero.findAll();
-        const artistas = await Artista.findAll();
-        const musicas = await Musica.findAll();
-        res.render('addVinis', { 
-            generos: generos.map(g => g.toJSON()),
-            artistas: artistas.map(a => a.toJSON()),
-            musicas: musicas.map(m => m.toJSON())
-        });
-    } catch (error) {
-        res.status(500).send('Erro ao carregar formulário: ' + error.message);
-    }
-});
-
-// Criar novo vinil
-app.post('/vinis', async (req, res) => {
-    try {
-        const { nome, artista, artistaId, musicaId, preco, ano, genero, quant, foto } = req.body;
-        const generosArray = genero ? (Array.isArray(genero) ? genero : [genero]) : [];
-        
-        let nomeArtista = artista;
-        if (artistaId) {
-            const artistaObj = await Artista.findByPk(artistaId);
-            if (artistaObj) nomeArtista = artistaObj.nome;
-        }
-        
-        await Vinil.create({
-            nome,
-            artista: nomeArtista,
-            artistaId: artistaId ? parseInt(artistaId) : null,
-            musicaId: musicaId ? parseInt(musicaId) : null,
-            preco: parseFloat(preco) || 0,
-            ano: parseInt(ano) || new Date().getFullYear(),
-            genero: generosArray,
-            quant: parseInt(quant) || 0,
-            foto: foto || ''
-        });
-        res.redirect('/vinis');
-    } catch (error) {
-        res.status(500).send('Erro ao criar vinil: ' + error.message);
-    }
-});
-
-// Detalhar vinil 
-app.get('/vinis/:id', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        const vinil = await Vinil.findByPk(id);
-        if (vinil) {
-            res.render('detalharVinil', { vinil: vinil.toJSON() });
-        } else {
-            res.status(404).send('Vinil não encontrado');
-        }
-    } catch (error) {
-        res.status(500).send('Erro ao buscar vinil: ' + error.message);
-    }
-});
-
-// Formulário para editar vinil
-app.get('/vinis/:id/edit', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        const vinil = await Vinil.findByPk(id);
-        if (vinil) {
-            const generos = await Genero.findAll();
-            const artistas = await Artista.findAll();
-            const musicas = await Musica.findAll();
-            res.render('editarVinil', { 
-                vinil: vinil.toJSON(),
-                generos: generos.map(g => g.toJSON()),
-                artistas: artistas.map(a => a.toJSON()),
-                musicas: musicas.map(m => m.toJSON())
-            });
-        } else {
-            res.status(404).send('Vinil não encontrado');
-        }
-    } catch (error) {
-        res.status(500).send('Erro ao carregar formulário: ' + error.message);
-    }
-});
-
-// Atualizar vinil
-app.post('/vinis/:id/update', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        const { nome, artista, artistaId, musicaId, preco, ano, genero, quant, foto } = req.body;
-        const vinil = await Vinil.findByPk(id);
-        
-        if (!vinil) {
-            return res.status(404).send('Vinil não encontrado');
-        }
-        
-        const generosArray = genero ? (Array.isArray(genero) ? genero : [genero]) : [];
-        
-        let nomeArtista = artista || vinil.artista;
-        if (artistaId) {
-            const artistaObj = await Artista.findByPk(artistaId);
-            if (artistaObj) nomeArtista = artistaObj.nome;
-        }
-        
-        await vinil.update({
-            nome,
-            artista: nomeArtista,
-            artistaId: artistaId ? parseInt(artistaId) : vinil.artistaId,
-            musicaId: musicaId ? parseInt(musicaId) : vinil.musicaId,
-            preco: parseFloat(preco) || 0,
-            ano: parseInt(ano) || new Date().getFullYear(),
-            genero: generosArray,
-            quant: parseInt(quant) || 0,
-            foto: foto || vinil.foto || ''
-        });
-        res.redirect('/vinis');
-    } catch (error) {
-        res.status(500).send('Erro ao atualizar vinil: ' + error.message);
-    }
-});
-
-// Deletar vinil
-app.post('/vinis/:id/delete', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        const vinil = await Vinil.findByPk(id);
-        if (vinil) {
-            await vinil.destroy();
-            res.redirect('/vinis');
-        } else {
-            res.status(404).send('Vinil não encontrado');
-        }
-    } catch (error) {
-        res.status(500).send('Erro ao deletar vinil: ' + error.message);
-    }
-});
+// Rotas de vinis agora estão em routes/vinisRoutes.js usando Sequelize
 
 // ========== CRUD DE PERFIS ==========
 // Listar todos os perfis
@@ -379,8 +245,13 @@ app.get('/artistas/add', (req, res) => {
 // Criar novo artista
 app.post('/artistas', async (req, res) => {
     try {
-        const { nome, biografia } = req.body;
-        await Artista.create({ nome, biografia: biografia || '' });
+        const { nome, pais, ano_inicio, biografia } = req.body;
+        await Artista.create({ 
+            nome, 
+            pais: pais || null,
+            ano_inicio: ano_inicio ? parseInt(ano_inicio) : null,
+            biografia: biografia || '' 
+        });
         res.redirect('/artistas');
     } catch (error) {
         res.status(500).send('Erro ao criar artista: ' + error.message);
@@ -421,10 +292,15 @@ app.get('/artistas/:id/edit', async (req, res) => {
 app.post('/artistas/:id/update', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const { nome, biografia } = req.body;
+        const { nome, pais, ano_inicio, biografia } = req.body;
         const artista = await Artista.findByPk(id);
         if (artista) {
-            await artista.update({ nome, biografia: biografia || '' });
+            await artista.update({ 
+                nome, 
+                pais: pais || null,
+                ano_inicio: ano_inicio ? parseInt(ano_inicio) : null,
+                biografia: biografia || '' 
+            });
             res.redirect('/artistas');
         } else {
             res.status(404).send('Artista não encontrado');
