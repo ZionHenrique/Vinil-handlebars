@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Artista</title>
+    <style>
+        body { font-family: Arial; margin: 20px; max-width: 600px; }
+        label { display:block; margin-top:15px; font-weight:bold; }
+        input { width:100%; padding:8px; margin-top:5px; }
+        button {
+            margin-top: 20px; padding: 10px 20px;
+            background: #007bff; border:none; color:white; cursor:pointer;
+        }
+        button:hover { background:#0069d9; }
+        a { color:#0066cc; }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Artista</h1>
+
+    <form action="/artistas/{{artista.id}}/update" method="POST">
+
+        <label>Nome:</label>
+        <input type="text" name="nome" value="{{artista.nome}}" required>
+
+        <label>País:</label>
+        <input type="text" name="pais" value="{{artista.pais}}" required>
+
+        <label>Ano de Início:</label>
+        <input type="number" name="ano_inicio" value="{{artista.ano_inicio}}" required>
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <br>
+    <a href="/artistas/{{artista.id}}">Voltar</a> |
+    <a href="/artistas">Lista</a> |
+    <a href="/">Home</a>
+
+</body>
+</html>

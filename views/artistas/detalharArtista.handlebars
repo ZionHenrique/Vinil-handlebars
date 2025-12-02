@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Artista</title>
+    <style>
+        body { font-family: Arial; margin: 20px; max-width: 600px; }
+        p { margin: 10px 0; }
+        a { color:#0066cc; }
+        form { display:inline; }
+        button { background:none; border:none; color:red; cursor:pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Detalhes do Artista</h1>
+
+    <p><strong>ID:</strong> {{artista.id}}</p>
+    <p><strong>Nome:</strong> {{artista.nome}}</p>
+    <p><strong>País:</strong> {{artista.pais}}</p>
+    <p><strong>Ano de Início:</strong> {{artista.ano_inicio}}</p>
+
+    <br>
+
+    <a href="/artistas/{{artista.id}}/edit">Editar</a> |
+    <form action="/artistas/{{artista.id}}/delete" method="POST">
+        <button>Excluir</button>
+    </form>
+    <br><br>
+
+    <a href="/artistas">Voltar para Lista</a> |
+    <a href="/">Home</a>
+
+</body>
+</html>
