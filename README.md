@@ -73,3 +73,6 @@ npm start
 http://localhost:3000
 ```
 
+npm install sequelize sqlite3
+
+

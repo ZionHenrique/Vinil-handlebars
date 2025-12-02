@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Artistas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .btn-add { 
+            background: #28a745; padding: 10px 15px; color: white; 
+            text-decoration: none; border-radius: 4px;
+        }
+        .btn-add:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <h1>Lista de Artistas</h1>
+
+    <a class="btn-add" href="/artistas/add">Adicionar Novo Artista</a>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>País</th>
+            <th>Ano de Início</th>
+            <th>Ações</th>
+        </tr>
+
+        {{#each artistas}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{nome}}</td>
+            <td>{{pais}}</td>
+            <td>{{ano_inicio}}</td>
+            <td>
+                <a href="/artistas/{{id}}">Ver</a> |
+                <a href="/artistas/{{id}}/edit">Editar</a> |
+                <form action="/artistas/{{id}}/delete" method="POST" style="display:inline;">
+                    <button style="color:red; background:none; border:none; cursor:pointer;">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+
+    <br>
+    <a href="/">Voltar para Home</a>
+</body>
+</html>

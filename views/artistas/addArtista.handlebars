@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Artista</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
+        label { display:block; margin-top:15px; font-weight:bold; }
+        input { width:100%; padding:8px; margin-top:5px; }
+        button {
+            margin-top: 20px; padding: 10px 20px;
+            background: #28a745; border: none; color:white; cursor:pointer;
+        }
+        button:hover { background:#218838; }
+        a { color:#0066cc; }
+    </style>
+</head>
+<body>
+    <h1>Adicionar Novo Artista</h1>
+
+    <form action="/artistas" method="POST">
+
+        <label>Nome do Artista:</label>
+        <input type="text" name="nome" required>
+
+        <label>País de Origem:</label>
+        <input type="text" name="pais" placeholder="Ex: EUA, Brasil, UK" required>
+
+        <label>Ano de Início:</label>
+        <input type="number" name="ano_inicio" placeholder="Ex: 2010" required>
+
+        <button type="submit">Adicionar Artista</button>
+    </form>
+
+    <br>
+    <a href="/artistas">Voltar para Lista</a> |
+    <a href="/">Home</a>
+</body>
+</html>
