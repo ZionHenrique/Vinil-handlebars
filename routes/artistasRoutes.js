@@ -2,71 +2,54 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
 
-// Listar artistas
+// LISTAR
 router.get("/", (req, res) => {
-    db.all("SELECT * FROM artistas", [], (err, rows) => {
-        if (err) return res.send("Erro ao listar artistas.");
-        res.render("artistas/listaArtistas", { artistas: rows });
-    });
+  db.all("SELECT * FROM artistas", [], (err, artistas) => {
+    if (err) return res.send("Erro ao carregar artistas");
+    res.render("artistas/listaArtistas", { artistas });
+  });
 });
 
-// Form add
-router.get("/add", (req, res) => {
-    const redirect = req.query.redirect || "/artistas";
-    res.render("artistas/addArtista", { redirect });
-});
-
-// Criar artista
+// ADICIONAR
+router.get("/add", (req, res) => res.render("artistas/addArtista"));
 router.post("/", (req, res) => {
-    const { nome, pais, ano_inicio, redirect } = req.body;
-    const redirectUrl = redirect || "/artistas";
-    
-    console.log("Criando artista:", { nome, pais, ano_inicio, redirect, redirectUrl });
-
-    db.run(
-        "INSERT INTO artistas (nome, pais, ano_inicio) VALUES (?, ?, ?)",
-        [nome, pais, ano_inicio],
-        (err) => {
-            if (err) {
-                console.error("Erro ao inserir artista:", err);
-                return res.send("Erro ao adicionar artista: " + err.message);
-            }
-            console.log("Artista criado, redirecionando para:", redirectUrl);
-            res.redirect(redirectUrl);
-        }
-    );
+  const { nome, pais, ano_inicio, biografia } = req.body;
+  db.run(
+    "INSERT INTO artistas (nome, pais, ano_inicio, biografia) VALUES (?, ?, ?, ?)",
+    [nome, pais, ano_inicio, biografia],
+    (err) => {
+      if (err) return res.send("Erro ao adicionar artista");
+      res.redirect("/artistas");
+    }
+  );
 });
 
-// Detalhar
-router.get("/:id", (req, res) => {
-    db.get("SELECT * FROM artistas WHERE id = ?", [req.params.id], (err, artista) => {
-        if (!artista) return res.send("Artista não encontrado.");
-        res.render("artistas/detalharArtista", { artista });
-    });
-});
-
-// Editar form
+// EDITAR
 router.get("/:id/edit", (req, res) => {
-    db.get("SELECT * FROM artistas WHERE id = ?", [req.params.id], (err, artista) => {
-        if (!artista) return res.send("Artista não encontrado.");
-        res.render("artistas/editarArtista", { artista });
-    });
+  db.get("SELECT * FROM artistas WHERE id=?", [req.params.id], (err, artista) => {
+    if (err || !artista) return res.send("Artista não encontrado");
+    res.render("artistas/editarArtista", { artista });
+  });
 });
 
-// Atualizar
 router.post("/:id/update", (req, res) => {
-    const { nome, pais, ano_inicio } = req.body;
-
-    db.run(
-        "UPDATE artistas SET nome=?, pais=?, ano_inicio=? WHERE id=?",
-        [nome, pais, ano_inicio, req.params.id],
-        () => res.redirect("/artistas")
-    );
+  const { nome, pais, ano_inicio, biografia } = req.body;
+  db.run(
+    "UPDATE artistas SET nome=?, pais=?, ano_inicio=?, biografia=? WHERE id=?",
+    [nome, pais, ano_inicio, biografia, req.params.id],
+    (err) => {
+      if (err) return res.send("Erro ao atualizar artista");
+      res.redirect("/artistas");
+    }
+  );
 });
 
-// Deletar
+// DELETAR
 router.post("/:id/delete", (req, res) => {
-    db.run("DELETE FROM artistas WHERE id = ?", [req.params.id], () => res.redirect("/artistas"));
+  db.run("DELETE FROM artistas WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.send("Erro ao deletar artista");
+    res.redirect("/artistas");
+  });
 });
 
 module.exports = router;

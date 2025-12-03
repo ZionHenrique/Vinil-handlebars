@@ -1,10 +1,10 @@
-const { Sequelize } = require('sequelize');
-const path = require('path');
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: path.join(__dirname, '../database/vinil.db'),
-    logging: false
+const dbPath = path.join(__dirname, "vinilStore.db");
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) console.error(err.message);
+    else console.log("Banco carregado:", dbPath);
 });
 
-module.exports = sequelize;
+module.exports = db;
