@@ -29,6 +29,35 @@ db.serialize(() => {
     ano INTEGER
   )`);
 
+  // Tabela artistas
+  db.run(`CREATE TABLE IF NOT EXISTS artistas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    pais TEXT,
+    ano_inicio INTEGER,
+    biografia TEXT
+  )`);
+
+  // Tabela musicas
+  db.run(`CREATE TABLE IF NOT EXISTS musicas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    duracao TEXT,
+    artista TEXT
+  )`);
+
+  // Tabela compras
+  db.run(`CREATE TABLE IF NOT EXISTS compras (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente INTEGER,
+    vinil INTEGER,
+    quantidade INTEGER,
+    total REAL,
+    data TEXT,
+    FOREIGN KEY (cliente) REFERENCES perfis(id),
+    FOREIGN KEY (vinil) REFERENCES vinis(id)
+  )`);
+
   // Inserir dados iniciais
   db.get("SELECT COUNT(*) AS count FROM perfis", (err, row) => {
     if (row.count === 0) {

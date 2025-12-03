@@ -23,19 +23,33 @@ router.get("/add", (req, res) => {
 
 // CRIAR
 router.post("/", (req, res) => {
-  const { cliente, vinil, quantidade } = req.body;
+  const { cliente, vinil, clienteId, vinilId, quantidade } = req.body;
+  const clienteIdFinal = cliente || clienteId;
+  const vinilIdFinal = vinil || vinilId;
+  const quantidadeNum = quantidade ? parseInt(quantidade) : 1;
 
-  db.get("SELECT * FROM vinis WHERE id=?", [vinil], (err, item) => {
-    if (err || !item) return res.send("Vinil não encontrado");
+  if (!clienteIdFinal || !vinilIdFinal) {
+    return res.send("Cliente e vinil são obrigatórios");
+  }
 
-    const total = item.preco * quantidade;
+  db.get("SELECT * FROM vinis WHERE id=?", [vinilIdFinal], (err, item) => {
+    if (err) {
+      console.error("Erro ao buscar vinil:", err);
+      return res.send("Erro ao buscar vinil");
+    }
+    if (!item) return res.send("Vinil não encontrado");
+
+    const total = item.preco * quantidadeNum;
     const data = new Date().toISOString().split("T")[0];
 
     db.run(
       "INSERT INTO compras (cliente, vinil, quantidade, total, data) VALUES (?, ?, ?, ?, ?)",
-      [cliente, vinil, quantidade, total, data],
+      [clienteIdFinal, vinilIdFinal, quantidadeNum, total, data],
       (err) => {
-        if (err) return res.send("Erro ao adicionar compra");
+        if (err) {
+          console.error("Erro ao adicionar compra:", err);
+          return res.send("Erro ao adicionar compra: " + err.message);
+        }
         res.redirect("/compras");
       }
     );

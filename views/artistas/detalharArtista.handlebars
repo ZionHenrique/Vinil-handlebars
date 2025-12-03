@@ -32,10 +32,26 @@
                     <span style="font-size: 18px; margin-left: 10px;">{{artista.id}}</span>
                 </div>
                 
+                {{#if artista.pais}}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: var(--primary-color); font-size: 18px;">País:</strong>
+                    <span style="font-size: 18px; margin-left: 10px;">{{artista.pais}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if artista.ano_inicio}}
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: var(--primary-color); font-size: 18px;">Ano de Início:</strong>
+                    <span style="font-size: 18px; margin-left: 10px;">{{artista.ano_inicio}}</span>
+                </div>
+                {{/if}}
+                
+                {{#if artista.biografia}}
                 <div style="margin-bottom: 30px;">
                     <strong style="color: var(--primary-color); font-size: 18px; display: block; margin-bottom: 10px;">Biografia:</strong>
                     <p style="font-size: 16px; line-height: 1.6; color: #666; padding: 15px; background: #f8f9fa; border-radius: 8px;">{{artista.biografia}}</p>
                 </div>
+                {{/if}}
             </div>
             
             <div class="form-actions">

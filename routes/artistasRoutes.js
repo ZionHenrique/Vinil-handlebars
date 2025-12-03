@@ -10,18 +10,30 @@ router.get("/", (req, res) => {
   });
 });
 
-// ADICIONAR
+// ADICIONAR (rota específica deve vir antes de /:id)
 router.get("/add", (req, res) => res.render("artistas/addArtista"));
 router.post("/", (req, res) => {
   const { nome, pais, ano_inicio, biografia } = req.body;
+  const anoInicio = ano_inicio ? parseInt(ano_inicio) : null;
   db.run(
     "INSERT INTO artistas (nome, pais, ano_inicio, biografia) VALUES (?, ?, ?, ?)",
-    [nome, pais, ano_inicio, biografia],
+    [nome || null, pais || null, anoInicio, biografia || null],
     (err) => {
-      if (err) return res.send("Erro ao adicionar artista");
+      if (err) {
+        console.error("Erro ao adicionar artista:", err);
+        return res.send("Erro ao adicionar artista");
+      }
       res.redirect("/artistas");
     }
   );
+});
+
+// DETALHAR ARTISTA
+router.get("/:id", (req, res) => {
+  db.get("SELECT * FROM artistas WHERE id = ?", [req.params.id], (err, artista) => {
+    if (err || !artista) return res.send("Artista não encontrado");
+    res.render("artistas/detalharArtista", { artista });
+  });
 });
 
 // EDITAR
@@ -34,11 +46,15 @@ router.get("/:id/edit", (req, res) => {
 
 router.post("/:id/update", (req, res) => {
   const { nome, pais, ano_inicio, biografia } = req.body;
+  const anoInicio = ano_inicio ? parseInt(ano_inicio) : null;
   db.run(
     "UPDATE artistas SET nome=?, pais=?, ano_inicio=?, biografia=? WHERE id=?",
-    [nome, pais, ano_inicio, biografia, req.params.id],
+    [nome || null, pais || null, anoInicio, biografia || null, req.params.id],
     (err) => {
-      if (err) return res.send("Erro ao atualizar artista");
+      if (err) {
+        console.error("Erro ao atualizar artista:", err);
+        return res.send("Erro ao atualizar artista");
+      }
       res.redirect("/artistas");
     }
   );

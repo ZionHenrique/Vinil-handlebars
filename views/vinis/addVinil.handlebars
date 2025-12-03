@@ -1,78 +1,72 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../config/database"); // banco único vinilStore.db
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Vinil - Vinil Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">Vinil Store</a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/vinis">Vinis</a>
+                <a href="/perfis">Clientes</a>
+                <a href="/compras">Compras</a>
+                <a href="/artistas">Artistas</a>
+                <a href="/musicas">Músicas</a>
+                <a href="/generos">Gêneros</a>
+            </nav>
+        </div>
+    </header>
 
-// LISTAR VINIS
-router.get("/", (req, res) => {
-    db.all("SELECT * FROM vinis", [], (err, vinis) => {
-        if (err) return res.send("Erro ao carregar vinis");
-        res.render("vinis/listaVinis", { vinis });
-    });
-});
-
-// FORMULÁRIO DE ADIÇÃO
-router.get("/add", (req, res) => {
-    db.all("SELECT * FROM generos", [], (err, generos) => {
-        if (err) return res.send("Erro ao carregar gêneros");
-        res.render("vinis/addVinil", { generos });
-    });
-});
-
-// CRIAR VINIL
-router.post("/", (req, res) => {
-    const { nome, artista, preco, quant, genero, ano } = req.body;
-    const generoStr = Array.isArray(genero) ? genero.join(", ") : genero; // caso múltiplos gêneros
-    db.run(
-        "INSERT INTO vinis (nome, artista, preco, quant, genero, ano) VALUES (?, ?, ?, ?, ?, ?)",
-        [nome, artista, preco, quant, generoStr, ano],
-        (err) => {
-            if (err) return res.send("Erro ao adicionar vinil");
-            res.redirect("/vinis");
-        }
-    );
-});
-
-// DETALHAR VINIL
-router.get("/:id", (req, res) => {
-    db.get("SELECT * FROM vinis WHERE id = ?", [req.params.id], (err, vinil) => {
-        if (err || !vinil) return res.send("Vinil não encontrado");
-        res.render("vinis/detalharVinil", { vinil });
-    });
-});
-
-// FORMULÁRIO DE EDIÇÃO
-router.get("/:id/edit", (req, res) => {
-    db.get("SELECT * FROM vinis WHERE id = ?", [req.params.id], (err, vinil) => {
-        if (err || !vinil) return res.send("Vinil não encontrado");
-        db.all("SELECT * FROM generos", [], (err, generos) => {
-            if (err) return res.send("Erro ao carregar gêneros");
-            // Separar gêneros do vinil para pré-seleção
-            vinil.generosSelecionados = vinil.genero ? vinil.genero.split(", ") : [];
-            res.render("vinis/editarVinil", { vinil, generos });
-        });
-    });
-});
-
-// ATUALIZAR VINIL
-router.post("/:id/update", (req, res) => {
-    const { nome, artista, preco, quant, genero, ano } = req.body;
-    const generoStr = Array.isArray(genero) ? genero.join(", ") : genero;
-    db.run(
-        "UPDATE vinis SET nome=?, artista=?, preco=?, quant=?, genero=?, ano=? WHERE id=?",
-        [nome, artista, preco, quant, generoStr, ano, req.params.id],
-        (err) => {
-            if (err) return res.send("Erro ao atualizar vinil");
-            res.redirect("/vinis");
-        }
-    );
-});
-
-// DELETAR VINIL
-router.post("/:id/delete", (req, res) => {
-    db.run("DELETE FROM vinis WHERE id=?", [req.params.id], (err) => {
-        if (err) return res.send("Erro ao deletar vinil");
-        res.redirect("/vinis");
-    });
-});
-
-module.exports = router;
+    <div class="container">
+        <div class="form-container">
+            <h1 class="card-title">Adicionar Novo Vinil</h1>
+            <form action="/vinis" method="POST">
+                <div class="form-group">
+                    <label for="nome">Nome do Vinil:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Chromakopia" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="artista">Artista:</label>
+                    <input type="text" id="artista" name="artista" placeholder="Ex: Tyler, the Creator" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preco">Preço (R$):</label>
+                    <input type="number" id="preco" name="preco" step="0.01" placeholder="Ex: 99.99" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ano">Ano de Lançamento:</label>
+                    <input type="number" id="ano" name="ano" placeholder="Ex: 2024" min="1900" max="2100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quant">Quantidade em Estoque:</label>
+                    <input type="number" id="quant" name="quant" placeholder="Ex: 100" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="genero">Gênero(s):</label>
+                    <select id="genero" name="genero" multiple style="height: 120px;">
+                        {{#each generos}}
+                        <option value="{{nome}}">{{nome}}</option>
+                        {{/each}}
+                    </select>
+                    <small style="display: block; margin-top: 5px; color: #666;">Mantenha Ctrl (Windows) ou Cmd (Mac) pressionado para selecionar múltiplos gêneros.</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Adicionar Vinil</button>
+                    <a href="/vinis" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

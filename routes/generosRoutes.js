@@ -10,18 +10,30 @@ router.get("/", (req, res) => {
   });
 });
 
-// ADICIONAR
+// ADICIONAR (rota específica deve vir antes de /:id)
 router.get("/add", (req, res) => res.render("generos/addGenero"));
+
 router.post("/", (req, res) => {
   const { nome, descricao } = req.body;
   db.run(
     "INSERT INTO generos (nome, descricao) VALUES (?, ?)",
-    [nome, descricao],
+    [nome || null, descricao || null],
     (err) => {
-      if (err) return res.send("Erro ao adicionar gênero");
+      if (err) {
+        console.error("Erro ao adicionar gênero:", err);
+        return res.send("Erro ao adicionar gênero: " + err.message);
+      }
       res.redirect("/generos");
     }
   );
+});
+
+// DETALHAR GÊNERO
+router.get("/:id", (req, res) => {
+  db.get("SELECT * FROM generos WHERE id = ?", [req.params.id], (err, genero) => {
+    if (err || !genero) return res.send("Gênero não encontrado");
+    res.render("generos/detalharGenero", { genero });
+  });
 });
 
 // EDITAR
@@ -36,9 +48,12 @@ router.post("/:id/update", (req, res) => {
   const { nome, descricao } = req.body;
   db.run(
     "UPDATE generos SET nome=?, descricao=? WHERE id=?",
-    [nome, descricao, req.params.id],
+    [nome || null, descricao || null, req.params.id],
     (err) => {
-      if (err) return res.send("Erro ao atualizar gênero");
+      if (err) {
+        console.error("Erro ao atualizar gênero:", err);
+        return res.send("Erro ao atualizar gênero: " + err.message);
+      }
       res.redirect("/generos");
     }
   );

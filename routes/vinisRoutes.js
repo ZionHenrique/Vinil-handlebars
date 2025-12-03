@@ -21,12 +21,19 @@ router.get("/add", (req, res) => {
 // CRIAR VINIL
 router.post("/", (req, res) => {
   const { nome, artista, preco, quant, genero, ano } = req.body;
-  const generoStr = Array.isArray(genero) ? genero.join(", ") : genero;
+  const generoStr = Array.isArray(genero) ? genero.join(", ") : genero || null;
+  const precoNum = preco ? parseFloat(preco) : null;
+  const quantNum = quant ? parseInt(quant) : null;
+  const anoNum = ano ? parseInt(ano) : null;
+  
   db.run(
     "INSERT INTO vinis (nome, artista, preco, quant, genero, ano) VALUES (?, ?, ?, ?, ?, ?)",
-    [nome, artista, preco, quant, generoStr, ano],
+    [nome || null, artista || null, precoNum, quantNum, generoStr, anoNum],
     (err) => {
-      if (err) return res.send("Erro ao adicionar vinil");
+      if (err) {
+        console.error("Erro ao adicionar vinil:", err);
+        return res.send("Erro ao adicionar vinil: " + err.message);
+      }
       res.redirect("/vinis");
     }
   );
@@ -55,12 +62,19 @@ router.get("/:id/edit", (req, res) => {
 // ATUALIZAR VINIL
 router.post("/:id/update", (req, res) => {
   const { nome, artista, preco, quant, genero, ano } = req.body;
-  const generoStr = Array.isArray(genero) ? genero.join(", ") : genero;
+  const generoStr = Array.isArray(genero) ? genero.join(", ") : genero || null;
+  const precoNum = preco ? parseFloat(preco) : null;
+  const quantNum = quant ? parseInt(quant) : null;
+  const anoNum = ano ? parseInt(ano) : null;
+  
   db.run(
     "UPDATE vinis SET nome=?, artista=?, preco=?, quant=?, genero=?, ano=? WHERE id=?",
-    [nome, artista, preco, quant, generoStr, ano, req.params.id],
+    [nome || null, artista || null, precoNum, quantNum, generoStr, anoNum, req.params.id],
     (err) => {
-      if (err) return res.send("Erro ao atualizar vinil");
+      if (err) {
+        console.error("Erro ao atualizar vinil:", err);
+        return res.send("Erro ao atualizar vinil: " + err.message);
+      }
       res.redirect("/vinis");
     }
   );
