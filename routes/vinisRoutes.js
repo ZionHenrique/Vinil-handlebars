@@ -6,6 +6,11 @@ const db = require("../config/database");
 router.get("/", (req, res) => {
   db.all("SELECT * FROM vinis", [], (err, vinis) => {
     if (err) return res.send("Erro ao carregar vinis");
+    // garantir que genero seja array em todas as instâncias
+    vinis = (vinis || []).map(v => ({
+      ...v,
+      genero: v.genero ? v.genero.split(/,\s*/) : []
+    }));
     res.render("vinis/listaVinis", { vinis });
   });
 });
@@ -43,6 +48,7 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   db.get("SELECT * FROM vinis WHERE id = ?", [req.params.id], (err, vinil) => {
     if (err || !vinil) return res.send("Vinil não encontrado");
+    vinil.genero = vinil.genero ? vinil.genero.split(/,\s*/) : [];
     res.render("vinis/detalharVinil", { vinil });
   });
 });
@@ -53,7 +59,7 @@ router.get("/:id/edit", (req, res) => {
     if (err || !vinil) return res.send("Vinil não encontrado");
     db.all("SELECT * FROM generos", [], (err, generos) => {
       if (err) return res.send("Erro ao carregar gêneros");
-      vinil.generosSelecionados = vinil.genero ? vinil.genero.split(", ") : [];
+      vinil.genero = vinil.genero ? vinil.genero.split(/,\s*/) : [];
       res.render("vinis/editarVinil", { vinil, generos });
     });
   });

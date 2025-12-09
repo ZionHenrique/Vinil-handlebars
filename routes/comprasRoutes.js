@@ -7,12 +7,16 @@ router.get("/", (req, res) => {
   const sql = `
     SELECT c.*, p.nome AS clienteNome, v.nome AS vinilNome, v.artista AS vinilArtista
     FROM compras c
-    LEFT JOIN perfis p ON c.cliente = p.id
-    LEFT JOIN vinis v ON c.vinil = v.id
+    LEFT JOIN perfis p ON c.clienteId = p.id
+    LEFT JOIN vinis v ON c.vinilId = v.id
     ORDER BY c.id DESC
   `;
   db.all(sql, [], (err, compras) => {
-    if (err) return res.send("Erro ao carregar compras");
+    if (err) {
+      console.error("Erro ao carregar compras:", err);
+      // renderizar a view com mensagem de erro para diagnóstico na UI
+      return res.render("compras/listaCompras", { compras: [], errorMessage: "Erro ao carregar compras: " + (err.message || err) });
+    }
     res.render("compras/listaCompras", { compras });
   });
 });
@@ -64,7 +68,7 @@ router.post("/", (req, res) => {
         }
 
         db.run(
-          "INSERT INTO compras (cliente, vinil, quantidade, total, data) VALUES (?, ?, ?, ?, ?)",
+          "INSERT INTO compras (clienteId, vinilId, quantidade, total, data) VALUES (?, ?, ?, ?, ?)",
           [cliente, vinil, quantidadeNum, total, data],
           (err) => {
             if (err) {
@@ -88,15 +92,15 @@ router.get("/:id", (req, res) => {
     if (err || !compra) return res.send("Compra não encontrada");
 
     // buscar cliente
-    db.get("SELECT * FROM perfis WHERE id = ?", [compra.cliente], (err, cliente) => {
+    db.get("SELECT * FROM perfis WHERE id = ?", [compra.clienteId], (err, cliente) => {
       if (err) cliente = null;
       // buscar vinil
-      db.get("SELECT * FROM vinis WHERE id = ?", [compra.vinil], (err, vinil) => {
+      db.get("SELECT * FROM vinis WHERE id = ?", [compra.vinilId], (err, vinil) => {
         if (err) vinil = null;
 
         // anexar objetos completos para a view
-        compra.cliente = cliente || { id: compra.cliente, nome: compra.cliente };
-        compra.vinil = vinil || { id: compra.vinil, nome: compra.vinil };
+        compra.cliente = cliente || { id: compra.clienteId, nome: '' };
+        compra.vinil = vinil || { id: compra.vinilId, nome: '' };
         // manter também campos auxiliares esperados pela lista/edição
         compra.clienteId = compra.cliente.id;
         compra.vinilId = compra.vinil.id;
@@ -112,9 +116,9 @@ router.get("/:id/edit", (req, res) => {
   db.get("SELECT * FROM compras WHERE id=?", [req.params.id], (err, compra) => {
     if (err || !compra) return res.send("Compra não encontrada");
 
-    // garantir que a view de edição encontre clienteId / vinilId
-    compra.clienteId = compra.cliente;
-    compra.vinilId = compra.vinil;
+    // compra já contém clienteId e vinilId vindos do banco
+    compra.clienteId = compra.clienteId;
+    compra.vinilId = compra.vinilId;
 
     db.all("SELECT * FROM perfis", [], (err, perfis) => {
       if (err) return res.send("Erro ao carregar clientes");
@@ -137,7 +141,7 @@ router.post("/:id/update", (req, res) => {
     if (err || !compraOld) return res.send("Compra antiga não encontrada");
 
     // se trocou de vinil, precisaremos devolver o estoque do vinil antigo e retirar do novo
-    if (compraOld.vinil === parseInt(novoVinil)) {
+    if (compraOld.vinilId === parseInt(novoVinil)) {
       // mesmo vinil: verificar disponibilidade da diferença
       const diff = novaQuantidade - compraOld.quantidade;
       if (diff > 0) {
@@ -151,7 +155,7 @@ router.post("/:id/update", (req, res) => {
           db.run("UPDATE vinis SET quant = quant - ? WHERE id=?", [diff, novoVinil], (err) => {
             if (err) return res.send("Erro ao atualizar estoque");
             db.run(
-              "UPDATE compras SET cliente=?, vinil=?, quantidade=?, total=?, data=? WHERE id=?",
+              "UPDATE compras SET clienteId=?, vinilId=?, quantidade=?, total=?, data=? WHERE id=?",
               [novoCliente, novoVinil, novaQuantidade, (compraOld.total / compraOld.quantidade) * novaQuantidade, compraOld.data, req.params.id],
               (err) => {
                 if (err) return res.send("Erro ao atualizar compra");
@@ -167,18 +171,18 @@ router.post("/:id/update", (req, res) => {
           db.run("UPDATE vinis SET quant = quant + ? WHERE id=?", [devolver, novoVinil], (err) => {
             if (err) return res.send("Erro ao atualizar estoque");
             db.run(
-              "UPDATE compras SET cliente=?, vinil=?, quantidade=?, total=?, data=? WHERE id=?",
-              [novoCliente, novoVinil, novaQuantidade, (compraOld.total / compraOld.quantidade) * novaQuantidade, compraOld.data, req.params.id],
-              (err) => {
-                if (err) return res.send("Erro ao atualizar compra");
-                res.redirect("/compras");
-              }
-            );
+                "UPDATE compras SET clienteId=?, vinilId=?, quantidade=?, total=?, data=? WHERE id=?",
+                [novoCliente, novoVinil, novaQuantidade, (compraOld.total / compraOld.quantidade) * novaQuantidade, compraOld.data, req.params.id],
+                (err) => {
+                  if (err) return res.send("Erro ao atualizar compra");
+                  res.redirect("/compras");
+                }
+              );
           });
         } else {
           // nenhuma alteração de estoque necessária
           db.run(
-            "UPDATE compras SET cliente=?, vinil=?, quantidade=?, total=?, data=? WHERE id=?",
+            "UPDATE compras SET clienteId=?, vinilId=?, quantidade=?, total=?, data=? WHERE id=?",
             [novoCliente, novoVinil, novaQuantidade, (compraOld.total / compraOld.quantidade) * novaQuantidade, compraOld.data, req.params.id],
             (err) => {
               if (err) return res.send("Erro ao atualizar compra");
@@ -196,7 +200,7 @@ router.post("/:id/update", (req, res) => {
         }
 
         // devolver ao antigo
-        db.run("UPDATE vinis SET quant = quant + ? WHERE id=?", [compraOld.quantidade, compraOld.vinil], (err) => {
+          db.run("UPDATE vinis SET quant = quant + ? WHERE id=?", [compraOld.quantidade, compraOld.vinilId], (err) => {
           if (err) console.error("Erro ao devolver estoque ao vinil antigo:", err);
 
           // retirar do novo
@@ -204,7 +208,7 @@ router.post("/:id/update", (req, res) => {
             if (err) return res.send("Erro ao atualizar estoque do novo vinil");
 
             db.run(
-              "UPDATE compras SET cliente=?, vinil=?, quantidade=?, total=?, data=? WHERE id=?",
+              "UPDATE compras SET clienteId=?, vinilId=?, quantidade=?, total=?, data=? WHERE id=?",
               [novoCliente, novoVinil, novaQuantidade, (compraOld.total / compraOld.quantidade) * novaQuantidade, compraOld.data, req.params.id],
               (err) => {
                 if (err) return res.send("Erro ao atualizar compra");
@@ -223,7 +227,7 @@ router.post("/:id/delete", (req, res) => {
   db.get("SELECT * FROM compras WHERE id=?", [req.params.id], (err, compra) => {
     if (err || !compra) return res.send("Compra não encontrada");
     // restaurar estoque
-    db.run("UPDATE vinis SET quant = quant + ? WHERE id = ?", [compra.quantidade, compra.vinil], (err) => {
+    db.run("UPDATE vinis SET quant = quant + ? WHERE id = ?", [compra.quantidade, compra.vinilId], (err) => {
       if (err) console.error("Erro ao restaurar estoque:", err);
       db.run("DELETE FROM compras WHERE id=?", [req.params.id], (err) => {
         if (err) return res.send("Erro ao deletar compra");

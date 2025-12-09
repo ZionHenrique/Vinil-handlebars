@@ -21,6 +21,11 @@
     </header>
 
     <div class="container">
+        {{#if errorMessage}}
+        <div class="card" style="border:1px solid #f5c6cb;background:#f8d7da;color:#721c24;padding:12px;border-radius:6px;margin-bottom:16px;">
+            <strong>Erro:</strong> {{errorMessage}}
+        </div>
+        {{/if}}
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1 class="card-title" style="margin-bottom: 0;">Compras Realizadas</h1>
