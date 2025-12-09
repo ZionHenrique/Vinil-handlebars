@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Distribuidora - Vinil Store</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="/" class="logo">Vinil Store</a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/vinis">Vinis</a>
+        <a href="/perfis">Clientes</a>
+        <a href="/compras">Compras</a>
+        <a href="/generos">Gêneros</a>
+        <a href="/distribuidoras">Distribuidoras</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1 class="card-title">{{distribuidora.nome}}</h1>
+      <p><strong>País:</strong> {{distribuidora.pais}}</p>
+      <p><strong>Contato:</strong> {{distribuidora.contato}}</p>
+      <p><strong>Descrição:</strong> {{distribuidora.descricao}}</p>
+      <div style="margin-top: 20px;">
+        <a href="/distribuidoras/{{distribuidora.id}}/edit" class="btn btn-secondary">Editar</a>
+        <a href="/distribuidoras" class="btn btn-primary">Voltar</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

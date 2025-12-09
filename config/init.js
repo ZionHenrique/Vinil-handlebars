@@ -46,6 +46,15 @@ db.serialize(() => {
     artista TEXT
   )`);
 
+  // Tabela distribuidoras (nova)
+  db.run(`CREATE TABLE IF NOT EXISTS distribuidoras (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    pais TEXT,
+    contato TEXT,
+    descricao TEXT
+  )`);
+
   // Tabela compras
   db.run(`CREATE TABLE IF NOT EXISTS compras (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,9 +67,9 @@ db.serialize(() => {
     FOREIGN KEY (vinil) REFERENCES vinis(id)
   )`);
 
-  // Inserir dados iniciais
+  // Inserir dados iniciais (mantidos)
   db.get("SELECT COUNT(*) AS count FROM perfis", (err, row) => {
-    if (row.count === 0) {
+    if (!err && row.count === 0) {
       db.run(`INSERT INTO perfis (nome,email,telefone,endereco) VALUES 
         ('João Silva','joao@email.com','(11) 99999-9999','Rua A, 123'),
         ('Maria Santos','maria@email.com','(11) 88888-8888','Rua B, 456')`);
@@ -68,7 +77,7 @@ db.serialize(() => {
   });
 
   db.get("SELECT COUNT(*) AS count FROM generos", (err, row) => {
-    if (row.count === 0) {
+    if (!err && row.count === 0) {
       db.run(`INSERT INTO generos (nome,descricao) VALUES
         ('Rap','Hip-hop e rap'),
         ('Rock','Rock alternativo e pop rock'),
@@ -77,7 +86,7 @@ db.serialize(() => {
   });
 
   db.get("SELECT COUNT(*) AS count FROM vinis", (err, row) => {
-    if (row.count === 0) {
+    if (!err && row.count === 0) {
       db.run(`INSERT INTO vinis (nome,artista,preco,quant,genero,ano) VALUES
         ('Chromakopia','Tyler, the Creator',536728.57,456789,'Rap',2024),
         ('Breach','Twenty one pilots',11111.11,6969696,'Rock, Pop',2025),

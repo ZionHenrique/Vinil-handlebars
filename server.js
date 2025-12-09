@@ -31,6 +31,7 @@ app.use("/generos", require("./routes/generosRoutes"));
 app.use("/artistas", require("./routes/artistasRoutes"));
 app.use("/musicas", require("./routes/musicasRoutes"));
 app.use("/compras", require("./routes/comprasRoutes"));
+app.use("/distribuidoras", require("./routes/distribuidorasRoutes"));
 
 // Home
 app.get("/", (req, res) => res.render("home"));

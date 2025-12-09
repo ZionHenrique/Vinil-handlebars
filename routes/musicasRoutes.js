@@ -4,8 +4,19 @@ const db = require("../config/database");
 
 // LISTAR
 router.get("/", (req, res) => {
-  db.all("SELECT * FROM musicas", [], (err, musicas) => {
+  const sql = `
+    SELECT m.*, a.id AS artistaId, a.nome AS artistaNome
+    FROM musicas m
+    LEFT JOIN artistas a ON a.nome = m.artista
+    ORDER BY m.id DESC
+  `;
+  db.all(sql, [], (err, musicas) => {
     if (err) return res.send("Erro ao carregar músicas");
+    // garantir que cada objeto tenha artistaNome (fallback para m.artista)
+    musicas = musicas.map(m => ({
+      ...m,
+      artistaNome: m.artistaNome || m.artista || ""
+    }));
     res.render("musicas/listaMusicas", { musicas });
   });
 });
@@ -21,7 +32,7 @@ router.get("/add", (req, res) => {
 router.post("/", (req, res) => {
   const { nome, duracao, artista, artistaId } = req.body;
   let artistaFinal = artista || null;
-  
+
   // Se foi enviado um ID, buscar o nome do artista
   if (artistaId && !artistaFinal) {
     db.get("SELECT nome FROM artistas WHERE id = ?", [artistaId], (err, artistaRow) => {
@@ -30,7 +41,7 @@ router.post("/", (req, res) => {
         return res.send("Erro ao buscar artista");
       }
       artistaFinal = artistaRow ? artistaRow.nome : null;
-      
+
       db.run(
         "INSERT INTO musicas (nome, duracao, artista) VALUES (?, ?, ?)",
         [nome || null, duracao || null, artistaFinal],
@@ -60,24 +71,46 @@ router.post("/", (req, res) => {
 
 // DETALHAR MÚSICA
 router.get("/:id", (req, res) => {
-  db.get("SELECT * FROM musicas WHERE id = ?", [req.params.id], (err, musica) => {
+  const sql = `
+    SELECT m.*, a.id AS artistaId, a.nome AS artistaNome
+    FROM musicas m
+    LEFT JOIN artistas a ON a.nome = m.artista
+    WHERE m.id = ?
+  `;
+  db.get(sql, [req.params.id], (err, musica) => {
     if (err || !musica) return res.send("Música não encontrada");
+    musica.artistaNome = musica.artistaNome || musica.artista || "";
     res.render("musicas/detalharMusica", { musica });
   });
 });
 
 // EDITAR
 router.get("/:id/edit", (req, res) => {
-  db.get("SELECT * FROM musicas WHERE id=?", [req.params.id], (err, musica) => {
+  // buscar a música e todos artistas para popular o select
+  const sql = `
+    SELECT m.*, a.id AS artistaId, a.nome AS artistaNome
+    FROM musicas m
+    LEFT JOIN artistas a ON a.nome = m.artista
+    WHERE m.id = ?
+  `;
+  db.get(sql, [req.params.id], (err, musica) => {
     if (err || !musica) return res.send("Música não encontrada");
-    res.render("musicas/editarMusica", { musica });
+
+    // carregar todos artistas
+    db.all("SELECT * FROM artistas", [], (err, artistas) => {
+      if (err) return res.send("Erro ao carregar artistas para edição");
+
+      // definir artistaId com base na ligação (se houver)
+      musica.artistaId = musica.artistaId || null;
+      res.render("musicas/editarMusica", { musica, artistas });
+    });
   });
 });
 
 router.post("/:id/update", (req, res) => {
   const { nome, duracao, artista, artistaId } = req.body;
   let artistaFinal = artista || null;
-  
+
   // Se foi enviado um ID, buscar o nome do artista
   if (artistaId && !artistaFinal) {
     db.get("SELECT nome FROM artistas WHERE id = ?", [artistaId], (err, artistaRow) => {
@@ -86,7 +119,7 @@ router.post("/:id/update", (req, res) => {
         return res.send("Erro ao buscar artista");
       }
       artistaFinal = artistaRow ? artistaRow.nome : null;
-      
+
       db.run(
         "UPDATE musicas SET nome=?, duracao=?, artista=? WHERE id=?",
         [nome || null, duracao || null, artistaFinal, req.params.id],
@@ -123,4 +156,3 @@ router.post("/:id/delete", (req, res) => {
 });
 
 module.exports = router;
-
