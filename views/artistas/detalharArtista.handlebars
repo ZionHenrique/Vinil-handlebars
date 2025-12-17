@@ -57,8 +57,7 @@
             {{! Associação bidirecional: Artistas ↔ Músicas (1:N) }}
             <div style="margin-top: 40px;">
                 <h2 style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;">Músicas do Artista</h2>
-                {{#if artista.musicas}}
-                    {{#if artista.musicas.length}}
+                {{#if artista.temMusicas}}
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                                 <thead>
@@ -83,9 +82,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    {{else}}
-                        <p style="color: #666; font-style: italic; margin-top: 20px;">Este artista ainda não tem músicas cadastradas.</p>
-                    {{/if}}
                 {{else}}
                     <p style="color: #666; font-style: italic; margin-top: 20px;">Este artista ainda não tem músicas cadastradas.</p>
                 {{/if}}

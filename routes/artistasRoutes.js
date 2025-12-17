@@ -30,16 +30,24 @@ router.post("/", (req, res) => {
 
 // DETALHAR ARTISTA
 router.get("/:id", (req, res) => {
-  db.get("SELECT * FROM artistas WHERE id = ?", [req.params.id], (err, artista) => {
+  const artistaId = parseInt(req.params.id);
+  
+  db.get("SELECT * FROM artistas WHERE id = ?", [artistaId], (err, artista) => {
     if (err || !artista) return res.send("Artista não encontrado");
     
     // Buscar músicas relacionadas (associação bidirecional 1:N)
     db.all(
       "SELECT * FROM musicas WHERE artistaId = ? ORDER BY nome ASC",
-      [req.params.id],
+      [artistaId],
       (err, musicas) => {
-        if (err) musicas = [];
-        artista.musicas = musicas || [];
+        if (err) {
+          console.error("Erro ao buscar músicas do artista:", err);
+          musicas = [];
+        }
+        // Garantir que musicas seja sempre um array
+        artista.musicas = Array.isArray(musicas) ? musicas : [];
+        artista.temMusicas = artista.musicas.length > 0;
+        console.log(`Artista ${artista.nome} (ID: ${artistaId}) - ${artista.musicas.length} música(s) encontrada(s)`);
         res.render("artistas/detalharArtista", { artista });
       }
     );
