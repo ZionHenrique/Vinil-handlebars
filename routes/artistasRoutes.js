@@ -32,7 +32,17 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   db.get("SELECT * FROM artistas WHERE id = ?", [req.params.id], (err, artista) => {
     if (err || !artista) return res.send("Artista não encontrado");
-    res.render("artistas/detalharArtista", { artista });
+    
+    // Buscar músicas relacionadas (associação bidirecional 1:N)
+    db.all(
+      "SELECT * FROM musicas WHERE artistaId = ? ORDER BY nome ASC",
+      [req.params.id],
+      (err, musicas) => {
+        if (err) musicas = [];
+        artista.musicas = musicas || [];
+        res.render("artistas/detalharArtista", { artista });
+      }
+    );
   });
 });
 

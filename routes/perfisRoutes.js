@@ -32,7 +32,22 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   db.get("SELECT * FROM perfis WHERE id = ?", [req.params.id], (err, perfil) => {
     if (err || !perfil) return res.send("Cliente não encontrado");
-    res.render("perfis/detalharPerfil", { perfil });
+    
+    // Buscar compras relacionadas (associação bidirecional 1:N)
+    // Tenta primeiro com clienteId, depois com cliente (para compatibilidade)
+    db.all(
+      `SELECT c.*, v.nome AS vinilNome, v.artista AS vinilArtista 
+       FROM compras c 
+       LEFT JOIN vinis v ON (c.vinilId = v.id OR c.vinil = v.id)
+       WHERE (c.clienteId = ? OR c.cliente = ?)
+       ORDER BY c.data DESC, c.id DESC`,
+      [req.params.id, req.params.id],
+      (err, compras) => {
+        if (err) compras = [];
+        perfil.compras = compras || [];
+        res.render("perfis/detalharPerfil", { perfil });
+      }
+    );
   });
 });
 

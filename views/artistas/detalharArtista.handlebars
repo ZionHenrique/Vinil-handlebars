@@ -54,6 +54,43 @@
                 {{/if}}
             </div>
             
+            {{! Associação bidirecional: Artistas ↔ Músicas (1:N) }}
+            <div style="margin-top: 40px;">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;">Músicas do Artista</h2>
+                {{#if artista.musicas}}
+                    {{#if artista.musicas.length}}
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background: var(--primary-color); color: white;">
+                                        <th style="padding: 12px; text-align: left;">ID</th>
+                                        <th style="padding: 12px; text-align: left;">Nome da Música</th>
+                                        <th style="padding: 12px; text-align: left;">Duração</th>
+                                        <th style="padding: 12px; text-align: center;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each artista.musicas}}
+                                    <tr style="border-bottom: 1px solid #ddd;">
+                                        <td style="padding: 12px;">{{this.id}}</td>
+                                        <td style="padding: 12px;">{{this.nome}}</td>
+                                        <td style="padding: 12px;">{{this.duracao}}</td>
+                                        <td style="padding: 12px; text-align: center;">
+                                            <a href="/musicas/{{this.id}}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 14px;">Ver</a>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    {{else}}
+                        <p style="color: #666; font-style: italic; margin-top: 20px;">Este artista ainda não tem músicas cadastradas.</p>
+                    {{/if}}
+                {{else}}
+                    <p style="color: #666; font-style: italic; margin-top: 20px;">Este artista ainda não tem músicas cadastradas.</p>
+                {{/if}}
+            </div>
+            
             <div class="form-actions">
                 <a href="/artistas/{{artista.id}}/edit" class="btn btn-primary">Editar Artista</a>
                 <form action="/artistas/{{artista.id}}/delete" method="POST" style="display: inline;">

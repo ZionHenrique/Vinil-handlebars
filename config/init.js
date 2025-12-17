@@ -43,7 +43,9 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     duracao TEXT,
-    artista TEXT
+    artista TEXT,
+    artistaId INTEGER,
+    FOREIGN KEY (artistaId) REFERENCES artistas(id)
   )`);
 
   // Tabela distribuidoras (nova)
@@ -58,13 +60,13 @@ db.serialize(() => {
   // Tabela compras
   db.run(`CREATE TABLE IF NOT EXISTS compras (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    cliente INTEGER,
-    vinil INTEGER,
+    clienteId INTEGER,
+    vinilId INTEGER,
     quantidade INTEGER,
     total REAL,
     data TEXT,
-    FOREIGN KEY (cliente) REFERENCES perfis(id),
-    FOREIGN KEY (vinil) REFERENCES vinis(id)
+    FOREIGN KEY (clienteId) REFERENCES perfis(id),
+    FOREIGN KEY (vinilId) REFERENCES vinis(id)
   )`);
 
   // Inserir dados iniciais (mantidos)

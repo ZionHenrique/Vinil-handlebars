@@ -55,6 +55,49 @@
                 </div>
             </div>
             
+            {{! Associação bidirecional: Perfis ↔ Compras (1:N) }}
+            <div style="margin-top: 40px;">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;">Compras Realizadas</h2>
+                {{#if perfil.compras}}
+                    {{#if perfil.compras.length}}
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background: var(--primary-color); color: white;">
+                                        <th style="padding: 12px; text-align: left;">ID</th>
+                                        <th style="padding: 12px; text-align: left;">Vinil</th>
+                                        <th style="padding: 12px; text-align: left;">Artista</th>
+                                        <th style="padding: 12px; text-align: center;">Quantidade</th>
+                                        <th style="padding: 12px; text-align: right;">Total</th>
+                                        <th style="padding: 12px; text-align: center;">Data</th>
+                                        <th style="padding: 12px; text-align: center;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each perfil.compras}}
+                                    <tr style="border-bottom: 1px solid #ddd;">
+                                        <td style="padding: 12px;">{{this.id}}</td>
+                                        <td style="padding: 12px;">{{this.vinilNome}}</td>
+                                        <td style="padding: 12px;">{{this.vinilArtista}}</td>
+                                        <td style="padding: 12px; text-align: center;">{{this.quantidade}}</td>
+                                        <td style="padding: 12px; text-align: right;">R$ {{this.total}}</td>
+                                        <td style="padding: 12px; text-align: center;">{{this.data}}</td>
+                                        <td style="padding: 12px; text-align: center;">
+                                            <a href="/compras/{{this.id}}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 14px;">Ver</a>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    {{else}}
+                        <p style="color: #666; font-style: italic; margin-top: 20px;">Este cliente ainda não realizou nenhuma compra.</p>
+                    {{/if}}
+                {{else}}
+                    <p style="color: #666; font-style: italic; margin-top: 20px;">Este cliente ainda não realizou nenhuma compra.</p>
+                {{/if}}
+            </div>
+            
             <div class="form-actions" style="margin-top: 30px;">
                 <a href="/perfis/{{perfil.id}}/edit" class="btn btn-primary">Editar Cliente</a>
                 <form action="/perfis/{{perfil.id}}/delete" method="POST" style="display: inline;">
